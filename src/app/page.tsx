@@ -13,5 +13,6 @@ export default function Home() {
 export function metadata(): Metadata {
   return {
     title: "Himanshu Mendapara",
+    description: "Dumb enough to learn new things.",
   };
 }
