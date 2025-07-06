@@ -5,7 +5,7 @@ import { Metadata } from "next";
 
 export default function Home() {
   return (
-    <main className="min-h-screen h-full lg:max-w-[1024px] mx-auto px-4 md:px-8 overflow-auto transition-colors duration-300">
+    <main className="min-h-screen space-y-20 pb-20 h-full lg:max-w-[1024px] mx-auto px-4 md:px-8 overflow-auto transition-colors duration-300">
       <Header />
       <About />
       <WorkEx />

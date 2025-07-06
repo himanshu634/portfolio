@@ -4,13 +4,19 @@ const techStack = [
   "Tailwind CSS",
   "Next.js",
   "Tanstack Query",
+  "Zustand",
+  "Sanity",
   "GSAP",
   "motion",
+  "Storybook",
+  "RTL",
+  "Playwright",
   "WebRTC",
   // "tRPC",
   // "Prisma",
   "Node.js",
   "Bun",
+  "pnpm",
   "PostgreSQL",
 ];
 
@@ -21,12 +27,12 @@ export function About() {
         Hey, Himanshu Mendapara here.
       </p>
       <p className="text-base sm:text-lg md:text-xl mt-1 italic">
-        Full Stack Developer.
+        Full Stack Developer. Vibe Coder. OSS Contributor.
       </p>
       <p className="text-sm sm:text-base md:text-lg max-w-xl mt-4">
         Dumb enough to learn new things. <br />
-        Always up for taking new and challenging task.
-        <br /> I am the builder who wants to build things that matters.
+        Always up for a rewrite.
+        <br /> I build, break, and fix things. Mostly in that order.
       </p>
       <div className="flex flex-wrap gap-2 mt-6 justify-center max-w-lg">
         {techStack.map((tech) => (

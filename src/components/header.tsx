@@ -8,17 +8,17 @@ export function Header() {
         {
           name: "Email",
           link: "mailto:himanshumendapra@gmail.com",
-          icon: <Mail className="size-6" />,
+          icon: <Mail className="size-6 stroke-[1.5px]" />,
         },
         {
           name: "LinkedIn",
           link: "https://www.linkedin.com/in/himanshu-mendapara-a732051aa/",
-          icon: <Linkedin className="size-6" />,
+          icon: <Linkedin className="size-6 stroke-[1.5px]" />,
         },
         {
           name: "GitHub",
           link: "https://github.com/himanshu634",
-          icon: <Github className="size-6" />,
+          icon: <Github className="size-6 stroke-[1.5px]" />,
         },
       ]}
     />
