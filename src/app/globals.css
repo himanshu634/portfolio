@@ -1,23 +1,31 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #ecdfcc;
+  --foreground: #1e201e;
+  --accent-1: #3c3d37;
+  --accent-2: #697565;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-accent-1: var(--accent-1);
+  --color-accent-2: var(--accent-2);
+
+  --font-sans: var(--font-fira-code);
+  --font-mono: var(--font-fira-code);
 }
 
 .dark {
-  --background: #0a0a0a;
-  --foreground: #ededed;
+  --background: #1e201e;
+  --foreground: #ecdfcc;
+  --accent-1: #3c3d37;
+  --accent-2: #697565;
 }
 
 * {
+  font-family: var(--font-fira-code);
   scroll-behavior: smooth;
 }
 
@@ -26,17 +34,18 @@ body {
   color: var(--foreground);
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
   line-height: 1.6;
+  letter-spacing: -0.01em;
 }
 
 /* Selection styles */
 ::selection {
-  background: #374151;
-  color: white;
+  background: var(--accent-2);
+  color: var(--background);
 }
 
 ::-moz-selection {
-  background: #374151;
-  color: white;
+  background: var(--accent-2);
+  color: var(--background);
 }
 
 /* Focus styles for accessibility */
@@ -62,36 +71,36 @@ textarea {
 }
 
 ::-webkit-scrollbar-track {
-  background: #f9fafb;
+  background: var(--background);
 }
 
 .dark ::-webkit-scrollbar-track {
-  background: #1f2937;
+  background: var(--background);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #d1d5db;
+  background: var(--accent-2);
   border-radius: 3px;
 }
 
 .dark ::-webkit-scrollbar-thumb {
-  background: #4b5563;
+  background: var(--accent-2);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #9ca3af;
+  background: var(--accent-1);
 }
 
 .dark ::-webkit-scrollbar-thumb:hover {
-  background: #6b7280;
+  background: var(--accent-1);
 }
 
 /* Firefox scrollbar */
 html {
   scrollbar-width: thin;
-  scrollbar-color: #d1d5db #f9fafb;
+  scrollbar-color: var(--accent-2) var(--background);
 }
 
 .dark html {
-  scrollbar-color: #4b5563 #1f2937;
+  scrollbar-color: var(--accent-2) var(--background);
 }
