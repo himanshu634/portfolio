@@ -25,6 +25,7 @@ export function metadata(): Metadata {
       "Web Developer",
       "React",
       "Next.js",
+      "Himanshu's github",
     ],
     authors: [{ name: "Himanshu Mendapara" }],
     openGraph: {
