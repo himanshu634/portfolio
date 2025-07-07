@@ -1,5 +1,7 @@
 import { About } from "@/components/about";
+import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
+import { OpenSourceContri } from "@/components/open-source-contri";
 import { WorkEx } from "@/components/work-ex";
 import { Metadata } from "next";
 
@@ -9,6 +11,8 @@ export default function Home() {
       <Header />
       <About />
       <WorkEx />
+      <OpenSourceContri />
+      <Footer />
     </main>
   );
 }

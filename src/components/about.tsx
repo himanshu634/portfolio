@@ -4,6 +4,7 @@ const techStack = [
   "Tailwind CSS",
   "Next.js",
   "Tanstack Query",
+  "ShadCN",
   "Zustand",
   "Sanity",
   "GSAP",
@@ -30,9 +31,9 @@ export function About() {
         Full Stack Developer. Vibe Coder. OSS Contributor.
       </p>
       <p className="text-sm sm:text-base md:text-lg max-w-xl mt-4">
-        Dumb enough to learn new things. <br />
-        Always up for a rewrite.
-        <br /> I build, break, and fix things. Mostly in that order.
+        I crave quality.
+        <br /> Dumb enough to learn new things.
+        <br />I build, break, and fix things. Mostly in that order.
       </p>
       <div className="flex flex-wrap gap-2 mt-6 justify-center max-w-lg">
         {techStack.map((tech) => (
