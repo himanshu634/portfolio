@@ -243,7 +243,7 @@ export function WorkEx() {
       <p className="text-4xl text-center font-semibold lg:text-5xl">
         Work Experience
       </p>
-      <Accordion type="single" className="mt-10" defaultValue={"1"}>
+      <Accordion type="multiple" className="mt-10" defaultValue={["1"]}>
         {experiences.map((exp) => (
           <AccordionItem value={exp.value} key={exp.value}>
             <AccordionTrigger>
