@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Fira_Code } from "next/font/google";
 import "./globals.css";
-import { ThemeProvider } from "@/contexts/theme-context";
 
 const firaCode = Fira_Code({
   variable: "--font-fira-code",
@@ -23,8 +22,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${firaCode.variable} font-fira-code antialiased`}>
-        <ThemeProvider>{children}</ThemeProvider>
+      <body className={`${firaCode.variable} font-fira-code antialiased dark`}>
+        {children}
       </body>
     </html>
   );
