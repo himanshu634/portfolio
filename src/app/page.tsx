@@ -4,6 +4,7 @@ import { Header } from "@/components/header";
 import { OpenSourceContri } from "@/components/open-source-contri";
 import { WorkEx } from "@/components/work-ex";
 import { Metadata } from "next";
+import SplashCursor from "@/components/ui/splash-cursor";
 
 export default function Home() {
   return (
@@ -13,6 +14,11 @@ export default function Home() {
       <WorkEx />
       <OpenSourceContri />
       <Footer />
+      <SplashCursor
+        BACK_COLOR={{ r: 0.5, g: 0, b: 0 }}
+        COLOR_UPDATE_SPEED={1}
+        TRANSPARENT
+      />
     </main>
   );
 }

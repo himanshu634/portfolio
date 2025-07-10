@@ -1,3 +1,5 @@
+import SplitText from "./ui/split-text";
+
 const techStack = [
   "TypeScript",
   "React",
@@ -24,9 +26,17 @@ const techStack = [
 export function About() {
   return (
     <div className="h-screen text-center flex flex-col items-center justify-center w-full ">
-      <p className="text-4xl font-semibold lg:text-5xl">
-        Hey, Himanshu Mendapara here.
-      </p>
+      <SplitText
+        className="text-3xl font-semibold lg:text-5xl break-words"
+        text="Hey, Himanshu here."
+        delay={10}
+        duration={2}
+        ease="elastic.out(1, 0.5)"
+        splitType="chars"
+        threshold={0.1}
+        rootMargin="-100px"
+        textAlign="center"
+      />
       <p className="text-base sm:text-lg md:text-xl mt-1 italic">
         Full Stack Developer. Vibe Coder. OSS Contributor.
       </p>
@@ -39,7 +49,7 @@ export function About() {
         {techStack.map((tech) => (
           <span
             key={tech}
-            className="px-3 py-1 rounded-full text-background bg-accent-2 hover:bg-foreground text-sm transition-all hover:-translate-y-0.5 cursor-pointer hover:-translate-x-0.5"
+            className="px-3 py-1 rounded-full text-background bg-foreground hover:bg-foreground text-sm transition-all hover:-translate-y-0.5 cursor-pointer hover:-translate-x-0.5"
           >
             {tech}
           </span>

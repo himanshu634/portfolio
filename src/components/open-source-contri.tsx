@@ -109,7 +109,7 @@ export function OpenSourceContri() {
       <p className="text-4xl text-center font-semibold lg:text-5xl mb-10">
         Open Source Contributions
       </p>
-      <div className="space-y-8 text-sm">
+      <div className="space-y-8 text-md">
         {contributions.map((contri) => (
           <ContributionCard key={contri.value} {...contri} />
         ))}
@@ -132,12 +132,12 @@ function ContributionCard({
   return (
     <div className="border-dashed border rounded-lg p-4 md:p-6 shadow-sm bg-background">
       <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-2 mb-1">
-        <ProjectTitle text={title} href={href} />
+        <ProjectTitle text={title} href={href} className="pt-0" />
         <span className="text-sm text-accent-2 sm:inline">
           ({organization})
         </span>
       </div>
-      <div>{content}</div>
+      <div className="">{content}</div>
     </div>
   );
 }
