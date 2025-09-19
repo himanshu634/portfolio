@@ -38,7 +38,7 @@ export function About() {
         textAlign="center"
       />
       <p className="text-base sm:text-lg md:text-xl mt-1 italic">
-        Full Stack Developer. Vibe Coder. OSS Contributor.
+        Software Engineer. OSS Contributor.
       </p>
       <p className="text-sm sm:text-base md:text-lg max-w-xl mt-4">
         I crave quality.
