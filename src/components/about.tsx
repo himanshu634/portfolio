@@ -1,6 +1,7 @@
 import SplitText from "./ui/split-text";
 
 const techStack = [
+  "Rust(Learning)",
   "TypeScript",
   "React",
   "Tailwind CSS",
@@ -15,8 +16,8 @@ const techStack = [
   "RTL",
   "Playwright",
   "WebRTC",
-  // "tRPC",
-  // "Prisma",
+  "tRPC",
+  "Prisma",
   "Node.js",
   "Bun",
   "pnpm",
@@ -38,13 +39,12 @@ export function About() {
         textAlign="center"
       />
       <p className="text-base sm:text-lg md:text-xl mt-1 italic">
-        Software Engineer. OSS Contributor.
+        Software Engineer.
+        <br />
+        <br /> Often found experimenting with new tech.
+        <br /> Currently exploring Rust.
       </p>
-      <p className="text-sm sm:text-base md:text-lg max-w-xl mt-4">
-        I crave quality.
-        <br /> Dumb enough to learn new things.
-        <br />I build, break, and fix things. Mostly in that order.
-      </p>
+      <p className="text-sm sm:text-base md:text-lg max-w-xl mt-4"></p>
       <div className="flex flex-wrap gap-2 mt-6 justify-center max-w-lg">
         {techStack.map((tech) => (
           <span

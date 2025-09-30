@@ -22,7 +22,7 @@ export function Header() {
         },
         {
           name: "X",
-          link: "https://x.com/himanshu_942",
+          link: "https://x.com/himanshu_btw",
           icon: <X />,
         },
       ]}
