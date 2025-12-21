@@ -60,18 +60,22 @@ export const FloatingNav = ({
           className
         )}
       >
-        {navItems.map((navItem, idx: number) => (
-          <Link
-            key={`link=${idx}`}
-            href={navItem.link}
-            target="_blank"
-            className={cn(
-              "relative items-center flex hover:bg-foreground/20 py-1 px-2 rounded-full space-x-1"
-            )}
-          >
-            <span>{navItem.icon}</span>
-          </Link>
-        ))}
+        {navItems.map((navItem, idx: number) => {
+          const isExternal = navItem.link.startsWith("http") || navItem.link.startsWith("mailto:");
+          return (
+            <Link
+              key={`link=${idx}`}
+              href={navItem.link}
+              target={isExternal ? "_blank" : undefined}
+              rel={isExternal ? "noopener noreferrer" : undefined}
+              className={cn(
+                "relative items-center flex hover:bg-foreground/20 py-1 px-2 rounded-full space-x-1"
+              )}
+            >
+              <span>{navItem.icon}</span>
+            </Link>
+          );
+        })}
       </motion.div>
     </AnimatePresence>
   );

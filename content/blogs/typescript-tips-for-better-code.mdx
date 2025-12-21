@@ -1,0 +1,147 @@
+---
+title: "TypeScript Tips for Better Code"
+description: "Practical TypeScript tips and tricks to write more robust and maintainable code."
+date: "2024-01-05"
+readTime: "6 min read"
+tags: ["TypeScript", "JavaScript", "Programming", "Tips"]
+---
+
+# TypeScript Tips for Better Code
+
+TypeScript has become essential for modern JavaScript development. Here are some tips to help you write better TypeScript code.
+
+## Use Type Inference
+
+Let TypeScript infer types when possible:
+
+```typescript
+// Good: Type is inferred
+const name = "John"; // string
+const age = 30; // number
+
+// Unnecessary: Explicit type
+const name: string = "John";
+```
+
+<Callout type="info">
+Type inference makes your code cleaner and easier to read. Only add explicit types when necessary for clarity.
+</Callout>
+
+## Utility Types
+
+TypeScript provides powerful utility types:
+
+### Partial
+
+Make all properties optional:
+
+```typescript
+interface User {
+  name: string;
+  email: string;
+  age: number;
+}
+
+// All properties become optional
+type PartialUser = Partial<User>;
+```
+
+### Pick and Omit
+
+Select or exclude properties:
+
+```typescript
+// Pick only name and email
+type UserPreview = Pick<User, 'name' | 'email'>;
+
+// Omit age
+type UserWithoutAge = Omit<User, 'age'>;
+```
+
+### Record
+
+Create object types with specific keys:
+
+```typescript
+type Status = 'pending' | 'approved' | 'rejected';
+type StatusMap = Record<Status, string>;
+
+const messages: StatusMap = {
+  pending: 'Processing...',
+  approved: 'Approved!',
+  rejected: 'Rejected',
+};
+```
+
+## Discriminated Unions
+
+Create type-safe state machines:
+
+```typescript
+type Result<T> = 
+  | { status: 'loading' }
+  | { status: 'success'; data: T }
+  | { status: 'error'; error: Error };
+
+function handleResult<T>(result: Result<T>) {
+  switch (result.status) {
+    case 'loading':
+      return <Spinner />;
+    case 'success':
+      return <Data data={result.data} />;
+    case 'error':
+      return <Error error={result.error} />;
+  }
+}
+```
+
+<Callout type="success">
+Discriminated unions help catch errors at compile time instead of runtime!
+</Callout>
+
+## Generic Constraints
+
+Constrain generic types for better safety:
+
+```typescript
+// Constraint: T must have an id property
+function findById<T extends { id: number }>(
+  items: T[],
+  id: number
+): T | undefined {
+  return items.find(item => item.id === id);
+}
+```
+
+## Never Use `any`
+
+Instead of `any`, use:
+
+- `unknown` for truly unknown types
+- Proper type definitions
+- Type guards for narrowing
+
+```typescript
+// Bad
+function process(data: any) {
+  return data.value;
+}
+
+// Good
+function process(data: unknown) {
+  if (typeof data === 'object' && data !== null && 'value' in data) {
+    return (data as { value: string }).value;
+  }
+  throw new Error('Invalid data');
+}
+```
+
+<Callout type="warning">
+Using `any` defeats the purpose of TypeScript. Take the time to properly type your code!
+</Callout>
+
+## Conclusion
+
+These tips will help you write more robust TypeScript code. Remember, TypeScript is there to help you catch bugs before they reach production.
+
+Happy typing! ⌨️
