@@ -6,8 +6,6 @@ readTime: "6 min read"
 tags: ["TypeScript", "JavaScript", "Programming", "Tips"]
 ---
 
-# TypeScript Tips for Better Code
-
 TypeScript has become essential for modern JavaScript development. Here are some tips to help you write better TypeScript code.
 
 ## Use Type Inference
@@ -24,7 +22,8 @@ const name: string = "John";
 ```
 
 <Callout type="info">
-Type inference makes your code cleaner and easier to read. Only add explicit types when necessary for clarity.
+  Type inference makes your code cleaner and easier to read. Only add explicit
+  types when necessary for clarity.
 </Callout>
 
 ## Utility Types
@@ -52,10 +51,10 @@ Select or exclude properties:
 
 ```typescript
 // Pick only name and email
-type UserPreview = Pick<User, 'name' | 'email'>;
+type UserPreview = Pick<User, "name" | "email">;
 
 // Omit age
-type UserWithoutAge = Omit<User, 'age'>;
+type UserWithoutAge = Omit<User, "age">;
 ```
 
 ### Record
@@ -63,13 +62,13 @@ type UserWithoutAge = Omit<User, 'age'>;
 Create object types with specific keys:
 
 ```typescript
-type Status = 'pending' | 'approved' | 'rejected';
+type Status = "pending" | "approved" | "rejected";
 type StatusMap = Record<Status, string>;
 
 const messages: StatusMap = {
-  pending: 'Processing...',
-  approved: 'Approved!',
-  rejected: 'Rejected',
+  pending: "Processing...",
+  approved: "Approved!",
+  rejected: "Rejected",
 };
 ```
 
@@ -78,25 +77,25 @@ const messages: StatusMap = {
 Create type-safe state machines:
 
 ```typescript
-type Result<T> = 
-  | { status: 'loading' }
-  | { status: 'success'; data: T }
-  | { status: 'error'; error: Error };
+type Result<T> =
+  | { status: "loading" }
+  | { status: "success"; data: T }
+  | { status: "error"; error: Error };
 
 function handleResult<T>(result: Result<T>) {
   switch (result.status) {
-    case 'loading':
+    case "loading":
       return <Spinner />;
-    case 'success':
+    case "success":
       return <Data data={result.data} />;
-    case 'error':
+    case "error":
       return <Error error={result.error} />;
   }
 }
 ```
 
 <Callout type="success">
-Discriminated unions help catch errors at compile time instead of runtime!
+  Discriminated unions help catch errors at compile time instead of runtime!
 </Callout>
 
 ## Generic Constraints
@@ -109,7 +108,7 @@ function findById<T extends { id: number }>(
   items: T[],
   id: number
 ): T | undefined {
-  return items.find(item => item.id === id);
+  return items.find((item) => item.id === id);
 }
 ```
 
@@ -129,15 +128,16 @@ function process(data: any) {
 
 // Good
 function process(data: unknown) {
-  if (typeof data === 'object' && data !== null && 'value' in data) {
+  if (typeof data === "object" && data !== null && "value" in data) {
     return (data as { value: string }).value;
   }
-  throw new Error('Invalid data');
+  throw new Error("Invalid data");
 }
 ```
 
 <Callout type="warning">
-Using `any` defeats the purpose of TypeScript. Take the time to properly type your code!
+  Using `any` defeats the purpose of TypeScript. Take the time to properly type
+  your code!
 </Callout>
 
 ## Conclusion

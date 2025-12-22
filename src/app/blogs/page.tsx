@@ -1,10 +1,12 @@
 import { getAllBlogPosts } from "@/lib/blogs";
 import Link from "next/link";
 import { Metadata } from "next";
+import { Header } from "@/components/header";
 
 export const metadata: Metadata = {
   title: "Blog - Himanshu Mendapara",
-  description: "Technical blog posts and articles about web development, programming, and technology.",
+  description:
+    "Technical blog posts and articles about web development, programming, and technology.",
 };
 
 export default function BlogsPage() {
@@ -12,12 +14,13 @@ export default function BlogsPage() {
 
   return (
     <main className="min-h-screen pb-20 lg:max-w-[1024px] mx-auto px-4 md:px-8">
-      <div className="py-12">
+      <Header />
+      <div className="py-12 pt-20 md:pt-12">
         <h1 className="text-4xl md:text-5xl font-bold mb-4 text-foreground">
           Blog
         </h1>
         <p className="text-accent-2 text-lg mb-12">
-          Thoughts, tutorials, and insights about software development.
+          My thought experiments and learnings.
         </p>
 
         {posts.length === 0 ? (
@@ -46,15 +49,15 @@ export default function BlogsPage() {
                         day: "numeric",
                       })}
                     </time>
-                    {post.readTime && (
+                    {/* {post.readTime && (
                       <>
                         <span>•</span>
                         <span>{post.readTime}</span>
                       </>
-                    )}
+                    )} */}
                   </div>
                   <p className="text-foreground/80 mb-4">{post.description}</p>
-                  {post.tags && post.tags.length > 0 && (
+                  {/* {post.tags && post.tags.length > 0 && (
                     <div className="flex flex-wrap gap-2">
                       {post.tags.map((tag) => (
                         <span
@@ -65,7 +68,7 @@ export default function BlogsPage() {
                         </span>
                       ))}
                     </div>
-                  )}
+                  )} */}
                 </article>
               </Link>
             ))}

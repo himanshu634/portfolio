@@ -6,8 +6,6 @@ readTime: "7 min read"
 tags: ["React", "TypeScript", "Components", "Best Practices"]
 ---
 
-# Building Reusable React Components
-
 Creating reusable components is one of the most important skills in React development. Let's explore some best practices and patterns.
 
 ## Why Reusability Matters
@@ -20,7 +18,8 @@ Reusable components offer several benefits:
 - **Testing** - Test once, benefit everywhere
 
 <Callout type="info">
-A well-designed component library can significantly speed up development time and improve code quality.
+  A well-designed component library can significantly speed up development time
+  and improve code quality.
 </Callout>
 
 ## Key Principles
@@ -62,15 +61,16 @@ Use TypeScript for better developer experience:
 
 ```tsx
 interface ButtonProps {
-  variant?: 'primary' | 'secondary' | 'ghost';
-  size?: 'sm' | 'md' | 'lg';
+  variant?: "primary" | "secondary" | "ghost";
+  size?: "sm" | "md" | "lg";
   children: React.ReactNode;
   onClick?: () => void;
 }
 ```
 
 <Callout type="warning">
-Always provide sensible defaults for optional props to make your components easier to use.
+  Always provide sensible defaults for optional props to make your components
+  easier to use.
 </Callout>
 
 ## Common Patterns
@@ -95,9 +95,9 @@ For maximum flexibility, use render props:
 
 ```tsx
 <DataFetcher url="/api/data">
-  {(data, loading, error) => (
+  {(data, loading, error) =>
     loading ? <Spinner /> : <DataDisplay data={data} />
-  )}
+  }
 </DataFetcher>
 ```
 
@@ -109,7 +109,8 @@ For maximum flexibility, use render props:
 4. **Think about accessibility** - ARIA attributes and keyboard navigation
 
 <Callout type="success">
-Remember: The best component is one that's so simple and intuitive that it needs no documentation!
+  Remember: The best component is one that's so simple and intuitive that it
+  needs no documentation!
 </Callout>
 
 ## Conclusion

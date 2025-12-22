@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import { Info, AlertTriangle, CheckCircle, XCircle } from "lucide-react";
 
 type CalloutType = "info" | "warning" | "success" | "error";
 
@@ -8,29 +9,32 @@ interface CalloutProps {
 }
 
 const typeStyles: Record<CalloutType, string> = {
-  info: "border-accent-blue bg-accent-blue/10",
-  warning: "border-yellow-500 bg-yellow-500/10",
-  success: "border-green-500 bg-green-500/10",
-  error: "border-red-500 bg-red-500/10",
+  info: "border-accent-2 bg-accent-2/10 text-foreground",
+  warning: "border-accent-2 bg-accent-2/10 text-foreground",
+  success: "border-accent-1 bg-accent-1/10 text-foreground",
+  error: "border-accent-2 bg-accent-2/20 text-foreground",
 };
 
-const typeIcons: Record<CalloutType, string> = {
-  info: "ℹ️",
-  warning: "⚠️",
-  success: "✅",
-  error: "❌",
+const typeIcons: Record<
+  CalloutType,
+  React.ComponentType<{ className?: string }>
+> = {
+  info: Info,
+  warning: AlertTriangle,
+  success: CheckCircle,
+  error: XCircle,
 };
 
 export function Callout({ type = "info", children }: CalloutProps) {
+  const Icon = typeIcons[type];
+
   return (
     <div
       className={`my-4 p-4 rounded-lg border-l-4 ${typeStyles[type]}`}
       role="alert"
     >
       <div className="flex gap-2">
-        <span className="text-xl" aria-hidden="true">
-          {typeIcons[type]}
-        </span>
+        <Icon className="w-5 h-5 mt-0.5 flex-shrink-0" aria-hidden="true" />
         <div className="flex-1">{children}</div>
       </div>
     </div>

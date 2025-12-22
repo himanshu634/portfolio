@@ -25,7 +25,7 @@ export function MDXLink({
   return (
     <Link
       href={href || "#"}
-      className="text-accent-blue hover:underline underline-offset-2"
+      className="hover:underline underline-offset-2"
       {...props}
     >
       {children}

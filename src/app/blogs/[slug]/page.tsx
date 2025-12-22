@@ -1,6 +1,7 @@
 import { getAllBlogPosts, getBlogPostBySlug } from "@/lib/blogs";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
+import SplashCursor from "@/components/ui/splash-cursor";
 
 interface BlogPostPageProps {
   params: Promise<{ slug: string }>;
@@ -13,7 +14,9 @@ export async function generateStaticParams() {
   }));
 }
 
-export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: BlogPostPageProps): Promise<Metadata> {
   const { slug } = await params;
   const post = getBlogPostBySlug(slug);
 
@@ -38,10 +41,12 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   }
 
   // Dynamically import the MDX file
-  const MDXContent = (await import(`@/../../content/blogs/${slug}.mdx`)).default;
+  const MDXContent = (await import(`@/../../content/blogs/${slug}.mdx`))
+    .default;
 
   return (
     <div>
+      <SplashCursor />
       <header className="mb-8 pb-8 border-b border-accent-2">
         <h1 className="text-4xl md:text-5xl font-bold mb-4 text-foreground">
           {post.metadata.title}
@@ -63,7 +68,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         </div>
         {post.metadata.tags && post.metadata.tags.length > 0 && (
           <div className="flex flex-wrap gap-2 mt-4">
-            {post.metadata.tags.map((tag) => (
+            {post.metadata.tags.map((tag: string) => (
               <span
                 key={tag}
                 className="text-xs px-3 py-1 bg-accent-1/30 text-accent-2 rounded-full border border-accent-2/50"
