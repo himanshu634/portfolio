@@ -1,0 +1,87 @@
+---
+title: "Getting Started with Next.js and MDX"
+description: "Learn how to set up and use MDX in your Next.js applications for creating rich, interactive content."
+date: "2024-01-15"
+readTime: "5 min read"
+tags: ["Next.js", "MDX", "React", "Web Development"]
+---
+
+MDX is a powerful tool that allows you to write JSX directly in your Markdown documents. This makes it perfect for creating interactive blog posts and documentation.
+
+## What is MDX?
+
+MDX stands for **Markdown + JSX**. It combines the simplicity of Markdown with the power of React components, allowing you to:
+
+- Write content in Markdown
+- Import and use React components
+- Create interactive examples
+- Build rich, engaging content
+
+<Callout type="info">
+  MDX is especially useful for technical blogs where you want to include
+  interactive code examples and custom components.
+</Callout>
+
+## Setting Up MDX in Next.js
+
+Setting up MDX in Next.js 15 is straightforward. Here's what you need to do:
+
+### 1. Install Dependencies
+
+First, install the required packages:
+
+```bash
+npm install @next/mdx @mdx-js/loader @mdx-js/react
+```
+
+### 2. Configure Next.js
+
+Update your `next.config.js` to support MDX:
+
+```javascript
+import createMDX from "@next/mdx";
+
+const withMDX = createMDX({
+  options: {
+    remarkPlugins: [],
+    rehypePlugins: [],
+  },
+});
+
+export default withMDX(nextConfig);
+```
+
+### 3. Create Your First MDX File
+
+Create a new MDX file in your content directory:
+
+```markdown
+---
+title: "My First Post"
+date: "2024-01-15"
+---
+
+# Hello World
+
+This is my first MDX post!
+```
+
+## Advanced Features
+
+MDX supports many advanced features out of the box:
+
+1. **Syntax Highlighting** - Automatic code syntax highlighting
+2. **Custom Components** - Use your own React components
+3. **Frontmatter** - Metadata for your posts
+4. **Table of Contents** - Auto-generated navigation
+
+<Callout type="success">
+  With MDX, you can create professional-looking technical content with minimal
+  effort!
+</Callout>
+
+## Conclusion
+
+MDX is a powerful tool for creating rich, interactive content. It combines the best of Markdown and React, making it perfect for technical blogs and documentation.
+
+Happy coding! 🚀

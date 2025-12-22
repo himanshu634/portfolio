@@ -1,10 +1,15 @@
 import { FloatingNav } from "./ui/floating-navbar";
-import { Mail, Linkedin, Github } from "lucide-react";
+import { Mail, Linkedin, Github, BookOpen } from "lucide-react";
 
 export function Header() {
   return (
     <FloatingNav
       navItems={[
+        {
+          name: "Blog",
+          link: "/blogs",
+          icon: <BookOpen className="size-6 stroke-[1.5px]" />,
+        },
         {
           name: "Email",
           link: "mailto:himanshumendapra@gmail.com",
