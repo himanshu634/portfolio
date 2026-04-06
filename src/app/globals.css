@@ -2,7 +2,7 @@
 @import "tw-animate-css";
 
 :root {
-  --background: #ecdfcc;
+  --background: #f5f1e8;
   --foreground: #1e201e;
   --accent-1: #3c3d37;
   --accent-2: #697565;
@@ -93,34 +93,18 @@ textarea {
   background: var(--background);
 }
 
-.dark ::-webkit-scrollbar-track {
-  background: var(--background);
-}
-
 ::-webkit-scrollbar-thumb {
   background: var(--accent-2);
   border-radius: 3px;
-}
-
-.dark ::-webkit-scrollbar-thumb {
-  background: var(--accent-2);
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--accent-1);
 }
 
-.dark ::-webkit-scrollbar-thumb:hover {
-  background: var(--accent-1);
-}
-
 /* Firefox scrollbar */
 html {
   scrollbar-width: thin;
-  scrollbar-color: var(--accent-2) var(--background);
-}
-
-.dark html {
   scrollbar-color: var(--accent-2) var(--background);
 }
 

@@ -22,7 +22,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${firaCode.variable} font-fira-code antialiased dark`}>
+      <body className={`${firaCode.variable} font-fira-code antialiased`}>
         {children}
       </body>
     </html>

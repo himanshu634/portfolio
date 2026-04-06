@@ -34,11 +34,11 @@ export default function BlogsPage() {
             {posts.map((post) => (
               <Link
                 key={post.slug}
-                href={`/blogs/${post.slug}`}
+                href={`/blog/${post.slug}`}
                 className="block group"
               >
-                <article className="border border-accent-2 rounded-lg p-6 hover:border-accent-blue transition-colors duration-200">
-                  <h2 className="text-2xl font-bold mb-2 text-foreground group-hover:text-accent-blue transition-colors">
+                <article className="border border-accent-2 rounded-lg p-6 hover:border-accent-1 transition-colors duration-200">
+                  <h2 className="text-2xl font-bold mb-2 text-foreground group-hover:text-accent-1 transition-colors">
                     {post.title}
                   </h2>
                   <div className="flex items-center gap-4 text-sm text-accent-2 mb-3">

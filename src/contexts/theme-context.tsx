@@ -1,8 +1,8 @@
 "use client";
 
-import React, { createContext, useContext, useEffect } from "react";
+import React, { createContext, useContext } from "react";
 
-type Theme = "dark";
+type Theme = "light";
 
 interface ThemeContextType {
   theme: Theme;
@@ -23,15 +23,8 @@ interface ThemeProviderProps {
 }
 
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
-  useEffect(() => {
-    document.documentElement.classList.add("dark");
-    return () => {
-      document.documentElement.classList.remove("dark");
-    };
-  }, []);
-
   return (
-    <ThemeContext.Provider value={{ theme: "dark" }}>
+    <ThemeContext.Provider value={{ theme: "light" }}>
       {children}
     </ThemeContext.Provider>
   );
