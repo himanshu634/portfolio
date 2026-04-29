@@ -1,7 +1,7 @@
 import { getAllBlogPosts, getBlogPostBySlug } from "@/lib/blogs";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
-import SplashCursor from "@/components/ui/splash-cursor";
+import Link from "next/link";
 
 interface BlogPostPageProps {
   params: Promise<{ slug: string }>;
@@ -9,49 +9,84 @@ interface BlogPostPageProps {
 
 export async function generateStaticParams() {
   const posts = getAllBlogPosts();
-  return posts.map((post) => ({
-    slug: post.slug,
-  }));
+  return posts.map((post) => ({ slug: post.slug }));
 }
 
-export async function generateMetadata({
-  params,
-}: BlogPostPageProps): Promise<Metadata> {
+const BASE_URL = "https://himanshumendapara.com";
+
+export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
   const { slug } = await params;
   const post = getBlogPostBySlug(slug);
+  if (!post) return { title: "Post Not Found" };
 
-  if (!post) {
-    return {
-      title: "Post Not Found",
-    };
-  }
+  const url = `${BASE_URL}/blog/${slug}`;
+  const { title, description, date, tags } = post.metadata;
+  const fullTitle = `${title} - Himanshu Mendapara`;
 
   return {
-    title: `${post.metadata.title} - Himanshu Mendapara`,
-    description: post.metadata.description,
+    title: fullTitle,
+    description,
+    keywords: tags,
+    alternates: { canonical: url },
+    openGraph: {
+      type: "article",
+      url,
+      title: fullTitle,
+      description,
+      publishedTime: date,
+      authors: ["Himanshu Mendapara"],
+      tags,
+      siteName: "Himanshu Mendapara",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: fullTitle,
+      description,
+    },
+    robots: {
+      index: true,
+      follow: true,
+    },
   };
 }
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const { slug } = await params;
   const post = getBlogPostBySlug(slug);
+  if (!post) notFound();
 
-  if (!post) {
-    notFound();
-  }
+  const MDXContent = (await import(`@/../../content/blogs/${slug}.mdx`)).default;
 
-  // Dynamically import the MDX file
-  const MDXContent = (await import(`@/../../content/blogs/${slug}.mdx`))
-    .default;
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: post.metadata.title,
+    description: post.metadata.description,
+    datePublished: post.metadata.date,
+    author: {
+      "@type": "Person",
+      name: "Himanshu Mendapara",
+      url: BASE_URL,
+    },
+    url: `${BASE_URL}/blog/${slug}`,
+    keywords: post.metadata.tags?.join(", "),
+  };
 
   return (
-    <div>
-      <SplashCursor />
-      <header className="mb-8 pb-8 border-b border-accent-2">
-        <h1 className="text-4xl md:text-5xl font-bold mb-4 text-foreground">
-          {post.metadata.title}
-        </h1>
-        <div className="flex items-center gap-4 text-accent-2">
+    <div className="pt-16">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <div className="mb-6 pb-4 border-b border-border">
+        <Link
+          href="/blogs"
+          className="text-sm text-muted hover:text-foreground transition-colors mb-6 block"
+        >
+          &larr; Writing
+        </Link>
+        <h1 className="text-2xl font-semibold mb-3">{post.metadata.title}</h1>
+        <div className="flex items-center gap-3 text-sm text-muted">
           <time dateTime={post.metadata.date}>
             {new Date(post.metadata.date).toLocaleDateString("en-US", {
               year: "numeric",
@@ -61,24 +96,12 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           </time>
           {post.metadata.readTime && (
             <>
-              <span>•</span>
+              <span>&middot;</span>
               <span>{post.metadata.readTime}</span>
             </>
           )}
         </div>
-        {post.metadata.tags && post.metadata.tags.length > 0 && (
-          <div className="flex flex-wrap gap-2 mt-4">
-            {post.metadata.tags.map((tag: string) => (
-              <span
-                key={tag}
-                className="text-xs px-3 py-1 bg-accent-1/30 text-accent-2 rounded-full border border-accent-2/50"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
-        )}
-      </header>
+      </div>
       <div className="mdx-content">
         <MDXContent />
       </div>
