@@ -1,8 +1,6 @@
 import { About } from "@/components/about";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
-import { OpenSourceContri } from "@/components/open-source-contri";
-import { WorkEx } from "@/components/work-ex";
 import { Writing } from "@/components/writing";
 import { Metadata } from "next";
 
@@ -12,8 +10,6 @@ export default function Home() {
       <Header />
       <main className="max-w-[680px] mx-auto px-4 pb-20">
         <About />
-        <WorkEx />
-        <OpenSourceContri />
         <Writing />
         <Footer />
       </main>

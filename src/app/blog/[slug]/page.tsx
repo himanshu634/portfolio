@@ -12,13 +12,41 @@ export async function generateStaticParams() {
   return posts.map((post) => ({ slug: post.slug }));
 }
 
+const BASE_URL = "https://himanshumendapara.com";
+
 export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
   const { slug } = await params;
   const post = getBlogPostBySlug(slug);
   if (!post) return { title: "Post Not Found" };
+
+  const url = `${BASE_URL}/blog/${slug}`;
+  const { title, description, date, tags } = post.metadata;
+  const fullTitle = `${title} - Himanshu Mendapara`;
+
   return {
-    title: `${post.metadata.title} - Himanshu Mendapara`,
-    description: post.metadata.description,
+    title: fullTitle,
+    description,
+    keywords: tags,
+    alternates: { canonical: url },
+    openGraph: {
+      type: "article",
+      url,
+      title: fullTitle,
+      description,
+      publishedTime: date,
+      authors: ["Himanshu Mendapara"],
+      tags,
+      siteName: "Himanshu Mendapara",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: fullTitle,
+      description,
+    },
+    robots: {
+      index: true,
+      follow: true,
+    },
   };
 }
 
@@ -29,8 +57,27 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
   const MDXContent = (await import(`@/../../content/blogs/${slug}.mdx`)).default;
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: post.metadata.title,
+    description: post.metadata.description,
+    datePublished: post.metadata.date,
+    author: {
+      "@type": "Person",
+      name: "Himanshu Mendapara",
+      url: BASE_URL,
+    },
+    url: `${BASE_URL}/blog/${slug}`,
+    keywords: post.metadata.tags?.join(", "),
+  };
+
   return (
     <div className="pt-16">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <div className="mb-6 pb-4 border-b border-border">
         <Link
           href="/blogs"
