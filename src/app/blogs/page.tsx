@@ -4,77 +4,48 @@ import { Metadata } from "next";
 import { Header } from "@/components/header";
 
 export const metadata: Metadata = {
-  title: "Blog - Himanshu Mendapara",
-  description:
-    "Technical blog posts and articles about web development, programming, and technology.",
+  title: "Writing — Himanshu Mendapara",
+  description: "Technical articles about web development, programming, and technology.",
 };
 
 export default function BlogsPage() {
   const posts = getAllBlogPosts();
 
   return (
-    <main className="min-h-screen pb-20 lg:max-w-[1024px] mx-auto px-4 md:px-8">
+    <>
       <Header />
-      <div className="py-12 pt-20 md:pt-12">
-        <h1 className="text-4xl md:text-5xl font-bold mb-4 text-foreground">
-          Blog
-        </h1>
-        <p className="text-accent-2 text-lg mb-12">
-          My thought experiments and learnings.
-        </p>
+      <main className="max-w-[680px] mx-auto px-4 pb-20">
+        <section className="pt-16 pb-12">
+          <h1 className="text-2xl font-semibold mb-2">Writing</h1>
+          <p className="text-muted text-sm mb-8">
+            Thought experiments and learnings.
+          </p>
 
-        {posts.length === 0 ? (
-          <div className="text-center py-20">
-            <p className="text-accent-2 text-lg">
-              No blog posts yet. Check back soon!
-            </p>
-          </div>
-        ) : (
-          <div className="space-y-8">
-            {posts.map((post) => (
-              <Link
-                key={post.slug}
-                href={`/blog/${post.slug}`}
-                className="block group"
-              >
-                <article className="border border-accent-2 rounded-lg p-6 hover:border-accent-1 transition-colors duration-200">
-                  <h2 className="text-2xl font-bold mb-2 text-foreground group-hover:text-accent-1 transition-colors">
+          {posts.length === 0 ? (
+            <p className="text-muted">No posts yet. Check back soon.</p>
+          ) : (
+            <div className="space-y-4">
+              {posts.map((post) => (
+                <div key={post.slug} className="flex items-baseline gap-6">
+                  <time className="text-sm text-muted shrink-0 w-28">
+                    {new Date(post.date).toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "short",
+                      day: "numeric",
+                    })}
+                  </time>
+                  <Link
+                    href={`/blog/${post.slug}`}
+                    className="text-foreground underline underline-offset-4 decoration-border hover:decoration-foreground transition-all"
+                  >
                     {post.title}
-                  </h2>
-                  <div className="flex items-center gap-4 text-sm text-accent-2 mb-3">
-                    <time dateTime={post.date}>
-                      {new Date(post.date).toLocaleDateString("en-US", {
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                      })}
-                    </time>
-                    {/* {post.readTime && (
-                      <>
-                        <span>•</span>
-                        <span>{post.readTime}</span>
-                      </>
-                    )} */}
-                  </div>
-                  <p className="text-foreground/80 mb-4">{post.description}</p>
-                  {/* {post.tags && post.tags.length > 0 && (
-                    <div className="flex flex-wrap gap-2">
-                      {post.tags.map((tag) => (
-                        <span
-                          key={tag}
-                          className="text-xs px-3 py-1 bg-accent-1/30 text-accent-2 rounded-full border border-accent-2/50"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                  )} */}
-                </article>
-              </Link>
-            ))}
-          </div>
-        )}
-      </div>
-    </main>
+                  </Link>
+                </div>
+              ))}
+            </div>
+          )}
+        </section>
+      </main>
+    </>
   );
 }

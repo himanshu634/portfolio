@@ -1,7 +1,5 @@
-import SplitText from "./ui/split-text";
-
 const techStack = [
-  "Rust(Learning)",
+  "Rust (learning)",
   "TypeScript",
   "React",
   "Tailwind CSS",
@@ -26,35 +24,16 @@ const techStack = [
 
 export function About() {
   return (
-    <div className="h-screen text-center flex flex-col items-center justify-center w-full ">
-      <SplitText
-        className="text-3xl font-semibold lg:text-5xl break-words"
-        text="Hey, Himanshu here."
-        delay={10}
-        duration={2}
-        ease="elastic.out(1, 0.5)"
-        splitType="chars"
-        threshold={0.1}
-        rootMargin="-100px"
-        textAlign="center"
-      />
-      <p className="text-base sm:text-lg md:text-xl mt-1 italic">
-        Software Engineer.
+    <section className="pt-16 pb-12">
+      <h1 className="text-3xl font-semibold mb-4">Hey, Himanshu here.</h1>
+      <p className="text-foreground leading-relaxed mb-6">
+        Software Engineer. Often found experimenting with new tech.
         <br />
-        <br /> Often found experimenting with new tech.
-        <br /> Currently exploring Rust.
+        Currently exploring Rust.
       </p>
-      <p className="text-sm sm:text-base md:text-lg max-w-xl mt-4"></p>
-      <div className="flex flex-wrap gap-2 mt-6 justify-center max-w-lg">
-        {techStack.map((tech) => (
-          <span
-            key={tech}
-            className="px-3 py-1 rounded-full text-background bg-foreground hover:bg-foreground text-sm transition-all hover:-translate-y-0.5 cursor-pointer hover:-translate-x-0.5"
-          >
-            {tech}
-          </span>
-        ))}
-      </div>
-    </div>
+      <p className="text-sm text-muted leading-relaxed font-mono">
+        {techStack.join(" · ")}
+      </p>
+    </section>
   );
 }

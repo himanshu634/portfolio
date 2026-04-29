@@ -6,7 +6,7 @@ export function InlineCode({
 }: ComponentPropsWithoutRef<"code">) {
   return (
     <code
-      className="bg-accent-1/30 text-foreground px-1.5 py-0.5 rounded text-sm font-mono border border-accent-2/50"
+      className="bg-accent-1/30 text-foreground px-1.5 py-0.5 rounded text-sm font-mono"
       {...props}
     >
       {children}
