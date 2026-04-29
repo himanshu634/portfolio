@@ -33,13 +33,7 @@ export function About() {
 
       {/* Tagline */}
       <p className="text-muted leading-relaxed mb-12 max-w-xl text-base sm:text-lg">
-        Tech lead who likes being too close to the product. Tech lead who likes
-        being too close to the product. Shipped Begenuin&apos;s short-form video
-        platform and a white-label reels SDK now embedded across partner
-        websites, complete with IMA-based video ad delivery. Currently leading
-        engineering at Bull Agritech, bringing the same product instinct to a
-        sector that rarely gets it. Always drawn to new technology, not for its
-        own sake, but to find what actually moves the needle.
+        An engineer solving for agritech.
       </p>
 
       {/* CTAs */}
