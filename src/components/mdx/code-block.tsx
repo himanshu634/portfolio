@@ -7,7 +7,7 @@ export function CodeBlock({
 }: ComponentPropsWithoutRef<"pre">) {
   return (
     <pre
-      className={`rounded-lg border border-accent-2 bg-accent-1/20 p-4 overflow-x-auto my-4 ${className || ""}`}
+      className={`rounded-lg border border-border bg-border/20 p-4 overflow-x-auto my-4 ${className || ""}`}
       {...props}
     >
       {children}
