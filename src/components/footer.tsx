@@ -27,7 +27,7 @@ export function Footer() {
   return (
     <footer className="border-t border-border py-8 mt-12">
       <div className="flex flex-wrap items-center justify-between gap-4 text-sm text-muted">
-        <p>© 2025 Himanshu Mendapara</p>
+        <p>© 2026 Himanshu Mendapara</p>
         <div className="flex items-center gap-4">
           <Link
             href="https://github.com/himanshu634"

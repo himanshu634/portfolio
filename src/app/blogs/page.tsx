@@ -15,7 +15,7 @@ export default function BlogsPage() {
     <>
       <Header />
       <main className="max-w-[680px] mx-auto px-4 pb-20">
-        <section className="pt-16 pb-12">
+        <section className="glass-panel px-6 py-8 sm:px-10 sm:py-10 mt-10">
           <h1 className="text-2xl font-semibold mb-2">Writing</h1>
           <p className="text-muted text-sm mb-8">
             Thought experiments and learnings.

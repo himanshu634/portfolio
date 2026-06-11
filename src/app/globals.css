@@ -2,10 +2,63 @@
 @import "tw-animate-css";
 
 :root {
-  --background: #faf8f5;
-  --foreground: #1a1a1a;
-  --muted: #5a5a5a;
-  --border: #e8e4de;
+  --background: #050510;
+  --foreground: #e8eaf6;
+  --muted: #8a90ad;
+  --border: rgba(148, 163, 216, 0.16);
+  --accent: #67e8f9;
+  --accent-2: #a78bfa;
+  --panel: rgba(10, 13, 28, 0.55);
+
+  /* Flight-deck font system (fontsource, self-hosted) */
+  --font-grotesk: "Space Grotesk", ui-sans-serif, sans-serif;
+  --font-jbmono: "JetBrains Mono", ui-monospace, monospace;
+  --font-orbitron: "Orbitron Variable", "Orbitron", sans-serif;
+  --font-fraunces: "Fraunces", Georgia, serif;
+  --font-chakra: "Chakra Petch", sans-serif;
+  --font-quicksand: "Quicksand", sans-serif;
+
+  /* Per-planet pairing defaults — swapped by body[data-planet] below */
+  --planet-display-font: var(--font-orbitron);
+  --planet-body-font: var(--font-grotesk);
+
+  /* Variable display weight, driven by ship velocity (300 rest -> 800 burn) */
+  --display-wght: 450;
+}
+
+/* Typography signals "new world": pairings swap during the wormhole. */
+body[data-planet="terra"] {
+  --planet-display-font: var(--font-fraunces);
+  --planet-body-font: var(--font-grotesk);
+}
+body[data-planet="forge"] {
+  --planet-display-font: var(--font-chakra);
+  --planet-body-font: var(--font-jbmono);
+}
+body[data-planet="genuin"] {
+  --planet-display-font: var(--font-orbitron);
+  --planet-body-font: var(--font-grotesk);
+}
+body[data-planet="glacius"] {
+  --planet-display-font: var(--font-orbitron);
+  --planet-body-font: var(--font-jbmono);
+}
+body[data-planet="comet"] {
+  --planet-display-font: var(--font-quicksand);
+  --planet-body-font: var(--font-grotesk);
+}
+body[data-planet="relay"] {
+  --planet-display-font: var(--font-orbitron);
+  --planet-body-font: var(--font-grotesk);
+}
+
+/* Flight mode: the canvas owns the page — no scroll, no document chrome. */
+body[data-mode="flight"] {
+  overflow: hidden;
+  height: 100dvh;
+}
+body[data-mode="flight"] #mission-log {
+  display: none;
 }
 
 @theme inline {
@@ -13,6 +66,9 @@
   --color-foreground: var(--foreground);
   --color-muted: var(--muted);
   --color-border: var(--border);
+  --color-accent: var(--accent);
+  --color-accent-2: var(--accent-2);
+  --color-panel: var(--panel);
 
   --font-sans: var(--font-lora);
   --font-mono: var(--font-fira-code);
@@ -55,22 +111,181 @@ nav, header, footer, time, code, pre, kbd {
   animation: wiggle 0.5s ease-in-out;
 }
 
+/* Glassy HUD panel */
+.glass-panel {
+  background: var(--panel);
+  backdrop-filter: blur(14px) saturate(1.2);
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  box-shadow: 0 0 40px rgba(103, 232, 249, 0.04);
+}
+
+/* ---- Cockpit HUD chrome (the only persistent 2D UI in flight) ---- */
+.hud-panel {
+  background: rgba(8, 11, 24, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--border);
+  border-radius: 0.6rem;
+}
+
+.hud-kicker {
+  font-family: var(--font-jbmono);
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  color: var(--muted);
+}
+
+.hud-line {
+  font-family: var(--font-jbmono);
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--muted);
+  max-width: 270px;
+}
+
+.hud-speed {
+  font-family: var(--font-orbitron);
+  font-variation-settings: "wght" var(--display-wght);
+  font-size: 26px;
+  color: var(--foreground);
+  line-height: 1.2;
+}
+
+.hud-speed-unit {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.hud-tooltip {
+  position: absolute;
+  bottom: 130%;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  font-family: var(--font-jbmono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--foreground);
+  background: rgba(8, 11, 24, 0.9);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 2px 8px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+}
+.group:hover .hud-tooltip,
+.group:focus-visible .hud-tooltip {
+  opacity: 1;
+}
+
+.hud-do-not-press {
+  font-family: var(--font-jbmono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  color: #ffd9d9;
+  background: radial-gradient(circle at 50% 30%, #e84a4a, #8f1d1d);
+  border: 1px solid #ff8a8a;
+  border-radius: 999px;
+  padding: 4px 12px;
+  cursor: pointer;
+  box-shadow: 0 0 12px rgba(232, 74, 74, 0.45);
+  transition: transform 0.1s ease;
+}
+.hud-do-not-press:active {
+  transform: scale(0.94);
+}
+
+/* ---- Holographic panel content (drei <Html transform> in scene space).
+   Not a card: no background, no shadow — the hologram shader plane behind
+   it provides the surface. ---- */
+.holo-card {
+  font-family: var(--planet-body-font);
+  color: #dfe6ff;
+  font-size: 12px;
+  line-height: 1.55;
+  padding: 14px 16px;
+  text-shadow: 0 0 6px rgba(103, 232, 249, 0.35);
+  user-select: none;
+}
+.holo-card a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.holo-card a:hover {
+  color: #ffffff;
+}
+.holo-kicker {
+  font-family: var(--font-jbmono);
+  font-size: 9px;
+  letter-spacing: 0.28em;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+.holo-title {
+  font-family: var(--planet-display-font);
+  font-size: 16px;
+  margin-bottom: 8px;
+  color: #ffffff;
+}
+.holo-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 8px;
+}
+.holo-list li {
+  margin-bottom: 4px;
+}
+.holo-list li::before {
+  content: "— ";
+  color: var(--accent);
+}
+.holo-links {
+  font-size: 11px;
+  color: var(--muted);
+}
+.holo-cta {
+  font-family: var(--font-jbmono);
+  font-size: 14px;
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+  padding: 6px 14px;
+  display: inline-block;
+}
+.holo-footnote {
+  margin-top: 10px;
+  font-size: 9px;
+  opacity: 0.65;
+}
+
+/* Static space backdrop for non-3D pages and fallbacks */
+.space-static {
+  background:
+    radial-gradient(ellipse 80% 50% at 20% -10%, rgba(167, 139, 250, 0.12), transparent),
+    radial-gradient(ellipse 60% 40% at 90% 10%, rgba(103, 232, 249, 0.08), transparent),
+    radial-gradient(ellipse 70% 60% at 50% 110%, rgba(99, 102, 241, 0.1), transparent),
+    var(--background);
+}
+
 /* Selection styles */
 ::selection {
-  background: var(--foreground);
-  color: var(--background);
+  background: var(--accent);
+  color: #050510;
 }
 
 ::-moz-selection {
-  background: var(--foreground);
-  color: var(--background);
+  background: var(--accent);
+  color: #050510;
 }
 
 /* Focus styles for accessibility */
 button:focus,
 input:focus,
 textarea:focus {
-  outline: 2px solid var(--foreground);
+  outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
 
@@ -209,3 +424,16 @@ html {
   padding: 0 !important;
   border: none !important;
 }
+
+/* Dark syntax highlighting palette (rehype-highlight / hljs) */
+.hljs { color: var(--foreground); }
+.hljs-comment, .hljs-quote { color: #6b7299; font-style: italic; }
+.hljs-keyword, .hljs-selector-tag, .hljs-tag { color: var(--accent-2); }
+.hljs-string, .hljs-attr, .hljs-regexp { color: #86efac; }
+.hljs-number, .hljs-literal, .hljs-symbol { color: #fbbf24; }
+.hljs-title, .hljs-function, .hljs-name, .hljs-section { color: var(--accent); }
+.hljs-built_in, .hljs-type, .hljs-class { color: #f0abfc; }
+.hljs-variable, .hljs-template-variable, .hljs-params { color: var(--foreground); }
+.hljs-meta, .hljs-doctag { color: #94a3b8; }
+.hljs-emphasis { font-style: italic; }
+.hljs-strong { font-weight: 700; }
