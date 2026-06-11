@@ -14,13 +14,15 @@ export default function WorkPage() {
     <>
       <Header />
       <main className="max-w-[680px] mx-auto px-4 pb-20">
-        <section className="pt-16 pb-12">
-          <h1 className="text-2xl font-semibold mb-2">Work</h1>
-          <p className="text-muted text-sm mb-12">Experience and projects.</p>
-          <WorkEx />
-        </section>
-        <OpenSourceContri />
-        <Footer />
+        <div className="glass-panel px-6 py-4 sm:px-10 sm:py-6 mt-10">
+          <section className="pt-8 pb-12">
+            <h1 className="text-2xl font-semibold mb-2">Work</h1>
+            <p className="text-muted text-sm mb-12">Experience and projects.</p>
+            <WorkEx />
+          </section>
+          <OpenSourceContri />
+          <Footer />
+        </div>
       </main>
     </>
   );

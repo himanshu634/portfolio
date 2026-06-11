@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Fira_Code, Lora } from "next/font/google";
 import "./globals.css";
 
@@ -23,6 +23,10 @@ export const metadata: Metadata = {
     "Software Engineer. Often found experimenting with new tech. Currently exploring Rust.",
 };
 
+export const viewport: Viewport = {
+  themeColor: "#050510",
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -30,7 +34,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${firaCode.variable} ${lora.variable} antialiased`}>
+      <body
+        className={`${firaCode.variable} ${lora.variable} antialiased space-static`}
+      >
         {children}
       </body>
     </html>
