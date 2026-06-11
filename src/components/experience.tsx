@@ -111,7 +111,9 @@ export function Experience({ posts }: { posts: PostShard[] }) {
         onClick={() => setMissionLog(!missionLog)}
         aria-pressed={missionLog}
         title={MISSION_LOG_LABEL}
-        className="hud-panel fixed right-4 top-4 z-50 px-3 py-1.5 font-mono text-xs tracking-wider text-muted hover:text-foreground transition-colors"
+        className={`hud-panel fixed right-4 z-[60] px-3 py-1.5 font-mono text-xs tracking-wider text-muted hover:text-foreground transition-colors ${
+          missionLog ? "top-16" : "top-4"
+        }`}
       >
         {missionLog ? "◉ RETURN TO SHIP" : "▤ MISSION LOG"}
       </button>

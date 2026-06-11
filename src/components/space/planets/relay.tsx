@@ -110,9 +110,9 @@ export function Relay() {
   const currentPlanet = useTravelStore((s) => s.currentPlanet);
   const active = currentPlanet === "relay";
 
-  const headingPos = useOrbitPos(W, 0.3, 1.4, 3.2);
-  const consolePos = useOrbitPos(W, 0.95, 1.45, 0.8);
-  const notePos = useOrbitPos(W, 1.7, 1.5, -1.6);
+  const headingPos = useOrbitPos(W, 0, 0, 6.6);
+  const consolePos = useOrbitPos(W, 0.95, 1.35, 0.8);
+  const notePos = useOrbitPos(W, 1.7, 1.4, -2.0);
 
   return (
     <>
@@ -121,17 +121,17 @@ export function Relay() {
       {active && (
         <>
           <Reveal at={0.02} position={headingPos}>
-            <HoloText font={FONT_DISPLAY} size={0.95} color="#ffffff" emissive>
+            <HoloText font={FONT_DISPLAY} size={0.46} color="#ffffff" emissive>
               CONTACT // DEEP SPACE RELAY
             </HoloText>
           </Reveal>
           <RevealMount at={0.2}>
             <group position={consolePos}>
               <HoloPanel
-                width={8}
-                height={5.8}
+                width={5.8}
+                height={4.2}
                 color={THEME.accent}
-                htmlWidth={320}
+                htmlWidth={300}
                 html={
                   <div className="holo-card">
                     <p className="holo-kicker">TRANSMISSION CONSOLE</p>
@@ -165,7 +165,7 @@ export function Relay() {
             </group>
           </RevealMount>
           <Reveal at={0.6} position={notePos}>
-            <HoloText font={FONT_MONO} size={0.3} color="#8a90ad" maxWidth={9}>
+            <HoloText font={FONT_MONO} size={0.22} color="#8a90ad" maxWidth={6}>
               {SILENCE_NOTE}
             </HoloText>
           </Reveal>

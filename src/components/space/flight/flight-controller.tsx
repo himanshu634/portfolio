@@ -67,7 +67,9 @@ export function FlightController() {
     sim.orbitAngV = C.ORBIT_BASE_DRIFT;
     sim.orbitMaxTheta = 0;
     posePlanet.current = w;
+    document.body.dataset.planet = w.id;
     store.transition("ORBIT", { currentPlanet: w.id });
+    store.setAdvisory(ADVISORIES[w.id]);
   }, []);
 
   useFrame((_, delta) => {
@@ -133,8 +135,10 @@ export function FlightController() {
     }
 
     // ---- Content reveal eases toward the orbit-progress target.
+    // Only once the orbit has settled — content arriving mid-insertion
+    // flashes past the camera.
     const revealTarget =
-      mode === "ORBIT" || mode === "ORBIT_INSERT"
+      mode === "ORBIT"
         ? THREE.MathUtils.clamp(
             sim.orbitMaxTheta / C.ORBIT_FULL_REVEAL + 0.12,
             0,

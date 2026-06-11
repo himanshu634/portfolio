@@ -8,6 +8,7 @@ import { Billboard, Text } from "@react-three/drei";
 import { useTravelStore } from "@/lib/store";
 import { SUN_POSITION, WAYPOINT_BY_ID } from "@/lib/flight/path";
 import { PLANET_THEMES, type PostShard } from "@/lib/content";
+import { makeGlowTexture } from "../nebula";
 import { useWarpHandlers } from "./common";
 import {
   FONT_DISPLAY,
@@ -30,6 +31,7 @@ function useTailDirection(): THREE.Vector3 {
 
 function CometTail() {
   const tailDir = useTailDirection();
+  const dustMap = useMemo(() => makeGlowTexture("#ffe9b3"), []);
   const geometry = useMemo(() => {
     const count = 700;
     const positions = new Float32Array(count * 3);
@@ -59,6 +61,7 @@ function CometTail() {
   return (
     <points geometry={geometry} raycast={() => null}>
       <pointsMaterial
+        map={dustMap}
         size={0.22}
         color="#ffe9b3"
         transparent
@@ -100,11 +103,11 @@ function PostShards({ posts }: { posts: PostShard[] }) {
           <Billboard follow>
             <Text
               font={FONT_MONO}
-              fontSize={0.42}
+              fontSize={0.32}
               color="#ffffff"
               anchorX="center"
               anchorY="middle"
-              maxWidth={9}
+              maxWidth={6.5}
               textAlign="center"
               onClick={(e) => {
                 e.stopPropagation();
@@ -120,9 +123,9 @@ function PostShards({ posts }: { posts: PostShard[] }) {
             </Text>
             <Text
               font={FONT_MONO}
-              fontSize={0.26}
+              fontSize={0.2}
               color="#b8a86f"
-              position={[0, -0.75, 0]}
+              position={[0, -0.6, 0]}
               anchorX="center"
             >
               {new Date(post.date).toLocaleDateString("en-US", {
@@ -150,9 +153,9 @@ export function Comet({ posts }: { posts: PostShard[] }) {
     if (nucleus.current) nucleus.current.rotation.y -= delta * 0.4;
   });
 
-  const headingPos = useOrbitPos(W, 0.3, 1.5, 3.0);
-  const blurbPos = useOrbitPos(W, 0.55, 1.5, 2.0);
-  const allPostsPos = useOrbitPos(W, 1.9, 1.6, 2.0);
+  const headingPos = useOrbitPos(W, 0, 0, 5.4);
+  const blurbPos = useOrbitPos(W, 0, 0, 4.4);
+  const allPostsPos = useOrbitPos(W, 1.9, 1.45, 2.0);
 
   return (
     <>
@@ -178,12 +181,12 @@ export function Comet({ posts }: { posts: PostShard[] }) {
       {active && (
         <>
           <Reveal at={0.02} position={headingPos}>
-            <HoloText font={FONT_DISPLAY} size={0.95} color="#ffffff" emissive>
+            <HoloText font={FONT_DISPLAY} size={0.46} color="#ffffff" emissive>
               WRITING // COMET SCRIPTOR
             </HoloText>
           </Reveal>
           <Reveal at={0.06} position={blurbPos}>
-            <HoloText font={FONT_MONO} size={0.34} color="#b8a86f" maxWidth={10}>
+            <HoloText font={FONT_MONO} size={0.24} color="#b8a86f" maxWidth={7}>
               Posts trail off the nucleus. Newest closest — drafts get flung
               into deep space.
             </HoloText>
@@ -192,7 +195,7 @@ export function Comet({ posts }: { posts: PostShard[] }) {
             <Billboard follow>
               <Text
                 font={FONT_MONO}
-                fontSize={0.45}
+                fontSize={0.34}
                 color={THEME.accent}
                 anchorX="center"
                 onClick={(e) => {

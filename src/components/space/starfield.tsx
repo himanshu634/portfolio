@@ -7,6 +7,22 @@ import { useTravelStore } from "@/lib/store";
 import { V_MAX } from "@/lib/flight/constants";
 import { FLIGHT_CURVE } from "@/lib/flight/path";
 
+/** Small round sprite so points render as stars, not squares. */
+function makeStarTexture(): THREE.CanvasTexture {
+  const size = 64;
+  const canvas = document.createElement("canvas");
+  canvas.width = size;
+  canvas.height = size;
+  const ctx = canvas.getContext("2d")!;
+  const g = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
+  g.addColorStop(0, "rgba(255,255,255,1)");
+  g.addColorStop(0.35, "rgba(255,255,255,0.8)");
+  g.addColorStop(1, "rgba(255,255,255,0)");
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, size, size);
+  return new THREE.CanvasTexture(canvas);
+}
+
 /**
  * Parallax-true starfield:
  *  - skybox layer: points on a sphere that follows the camera — zero
@@ -142,6 +158,7 @@ function SpeedLines({ count }: { count: number }) {
 
 export function Starfield({ quality }: { quality: "high" | "low" }) {
   const high = quality === "high";
+  const starMap = useMemo(() => makeStarTexture(), []);
   const far = useMemo(() => makeCorridorPoints(high ? 2400 : 1200, 280, 7), [high]);
   const mid = useMemo(() => makeCorridorPoints(high ? 1400 : 700, 150, 23), [high]);
   const near = useMemo(() => makeCorridorPoints(high ? 700 : 300, 70, 51), [high]);
@@ -151,6 +168,7 @@ export function Starfield({ quality }: { quality: "high" | "low" }) {
       <SkyboxStars count={high ? 1600 : 800} />
       <points geometry={far} raycast={() => null}>
         <pointsMaterial
+          map={starMap}
           size={0.5}
           color="#8fa0cf"
           transparent
@@ -161,6 +179,7 @@ export function Starfield({ quality }: { quality: "high" | "low" }) {
       </points>
       <points geometry={mid} raycast={() => null}>
         <pointsMaterial
+          map={starMap}
           size={0.32}
           color="#bfd4ff"
           transparent
@@ -172,6 +191,7 @@ export function Starfield({ quality }: { quality: "high" | "low" }) {
       </points>
       <points geometry={near} raycast={() => null}>
         <pointsMaterial
+          map={starMap}
           size={0.16}
           color="#e6eeff"
           transparent

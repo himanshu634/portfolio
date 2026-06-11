@@ -35,8 +35,10 @@ export default function SceneCanvas({ posts }: { posts: PostShard[] }) {
       >
         <color attach="background" args={["#050510"]} />
         <fog attach="fog" args={["#050510", 40, 260]} />
-        {/* Low ambient floor only — the sun owns the lighting. */}
-        <ambientLight intensity={0.05} />
+        {/* Low ambient floor only — the sun owns the lighting. Planet
+            shaders carry their own 0.05 ambient; this slightly higher
+            floor just keeps the ship's hull readable. */}
+        <ambientLight intensity={0.09} />
         <Suspense fallback={null}>
           <SceneMood />
           <Starfield quality={quality} />

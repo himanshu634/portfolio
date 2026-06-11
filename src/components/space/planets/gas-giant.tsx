@@ -67,9 +67,9 @@ function ProjectMoon({
           {labeled && (
             <HoloText
               font={FONT_MONO}
-              size={0.42}
+              size={0.34}
               color={THEME.accent}
-              position={[0, moon.radius + 0.7, 0]}
+              position={[0, moon.radius + 0.6, 0]}
             >
               {moon.name}
             </HoloText>
@@ -128,15 +128,15 @@ function TimelineRings({ labeled }: { labeled: boolean }) {
 }
 
 function MoonPanel({ moon, index }: { moon: Moon; index: number }) {
-  const pos = useOrbitPos(W, 0.75 + index * 0.62, 1.42, 2.2 - (index % 2) * 4.2);
+  const pos = useOrbitPos(W, 0.75 + index * 0.62, 1.3, 4.0 - (index % 2) * 8.4);
   return (
     <RevealMount at={0.18 + index * 0.18}>
       <group position={pos}>
         <HoloPanel
-        width={7.5}
-        height={5.6}
+        width={5.6}
+        height={4.4}
         color={THEME.accent}
-        htmlWidth={300}
+        htmlWidth={290}
         html={
           <div className="holo-card">
             <p className="holo-kicker">
@@ -198,8 +198,8 @@ export function GasGiant() {
     if (spinGroup.current) spinGroup.current.rotation.y += delta * 0.03;
   });
 
-  const headingPos = useOrbitPos(W, 0.3, 1.35, 5.2);
-  const rolePos = useOrbitPos(W, 0.3, 1.35, 3.9);
+  const headingPos = useOrbitPos(W, 0, 0, 13.5);
+  const rolePos = useOrbitPos(W, 0, 0, 12.1);
 
   return (
     <>
@@ -217,12 +217,12 @@ export function GasGiant() {
       {active && (
         <>
           <Reveal at={0.02} position={headingPos}>
-            <HoloText font={FONT_DISPLAY} size={1.15} color="#ffffff" emissive>
+            <HoloText font={FONT_DISPLAY} size={0.72} color="#ffffff" emissive>
               {`WORK // ${WORK_HEADLINE.title.toUpperCase()}`}
             </HoloText>
           </Reveal>
           <Reveal at={0.05} position={rolePos}>
-            <HoloText font={FONT_BODY} size={0.46} color="#cfd4ea" maxWidth={13}>
+            <HoloText font={FONT_BODY} size={0.36} color="#cfd4ea" maxWidth={11}>
               {`${WORK_HEADLINE.role} — ${WORK_HEADLINE.summary}`}
             </HoloText>
           </Reveal>

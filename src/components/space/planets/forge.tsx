@@ -66,16 +66,16 @@ function SkillSatellites({ labelsVisible }: { labelsVisible: boolean }) {
           ))}
           <Beacon position={[0, 0.2, 0]} color={THEME.accent} size={0.05} />
           {labelsVisible && (
-            <Reveal at={revealAt} position={[0, 0.85, 0]}>
-              <HoloText font={FONT_MONO} size={0.42} color="#ffffff" emissive>
+            <Reveal at={revealAt} position={[0, 0.8, 0]}>
+              <HoloText font={FONT_MONO} size={0.3} color="#ffffff" emissive>
                 {skill.name}
               </HoloText>
               <HoloText
                 font={FONT_MONO}
-                size={0.24}
+                size={0.18}
                 color="#9aa3c0"
-                position={[0, -0.5, 0]}
-                maxWidth={6}
+                position={[0, -0.38, 0]}
+                maxWidth={4.5}
               >
                 {skill.detail}
               </HoloText>
@@ -90,8 +90,8 @@ function SkillSatellites({ labelsVisible }: { labelsVisible: boolean }) {
 export function Forge() {
   const currentPlanet = useTravelStore((s) => s.currentPlanet);
   const active = currentPlanet === "forge";
-  const headingPos = useOrbitPos(W, 0.35, 1.4, 3.4);
-  const subPos = useOrbitPos(W, 0.35, 1.4, 2.3);
+  const headingPos = useOrbitPos(W, 0, 0, 7.4);
+  const subPos = useOrbitPos(W, 0, 0, 6.3);
 
   return (
     <>
@@ -115,12 +115,12 @@ export function Forge() {
       {active && (
         <>
           <Reveal at={0.02} position={headingPos}>
-            <HoloText font={FONT_DISPLAY} size={1.1} color="#ffffff" emissive>
+            <HoloText font={FONT_DISPLAY} size={0.52} color="#ffffff" emissive>
               SKILLS // FORGE-9
             </HoloText>
           </Reveal>
           <Reveal at={0.05} position={subPos}>
-            <HoloText font={FONT_MONO} size={0.36} color="#9aa3c0" maxWidth={12}>
+            <HoloText font={FONT_MONO} size={0.26} color="#9aa3c0" maxWidth={8}>
               Geostationary toolchain. Each satellite holds station above the
               code it is responsible for.
             </HoloText>

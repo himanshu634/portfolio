@@ -73,9 +73,9 @@ function ContributionSats({ labeled }: { labeled: boolean }) {
               {labeled && (
                 <HoloText
                   font={FONT_MONO}
-                  size={0.36}
+                  size={0.26}
                   color={THEME.accent}
-                  position={[0, 0.95, 0]}
+                  position={[0, 0.85, 0]}
                 >
                   {o.sat.name}
                 </HoloText>
@@ -93,10 +93,10 @@ export function Glacius() {
   const quality = useTravelStore((s) => s.quality);
   const active = currentPlanet === "glacius";
 
-  const headingPos = useOrbitPos(W, 0.3, 1.4, 3.4);
-  const summaryPos = useOrbitPos(W, 0.65, 1.38, 2.2);
-  const prPos = useOrbitPos(W, 1.15, 1.42, 2.6);
-  const dishPos = useOrbitPos(W, 1.8, 1.45, -1.4);
+  const headingPos = useOrbitPos(W, 0, 0, 7.4);
+  const summaryPos = useOrbitPos(W, 0, 0, 6.3);
+  const prPos = useOrbitPos(W, 1.15, 1.32, 3.0);
+  const dishPos = useOrbitPos(W, 1.8, 1.38, -2.4);
 
   return (
     <>
@@ -117,20 +117,20 @@ export function Glacius() {
       {active && (
         <>
           <Reveal at={0.02} position={headingPos}>
-            <HoloText font={FONT_DISPLAY} size={1.05} color="#ffffff" emissive>
+            <HoloText font={FONT_DISPLAY} size={0.52} color="#ffffff" emissive>
               OPEN SOURCE // WREN-AI
             </HoloText>
           </Reveal>
           <Reveal at={0.08} position={summaryPos}>
-            <HoloText font={FONT_MONO} size={0.4} color="#cfe7f5" maxWidth={12}>
+            <HoloText font={FONT_MONO} size={0.26} color="#cfe7f5" maxWidth={8}>
               {`${OSS_PROJECT.summary} (${OSS_PROJECT.org})`}
             </HoloText>
           </Reveal>
           <RevealMount at={0.3}>
             <group position={prPos}>
               <HoloPanel
-                width={7.2}
-                height={4.6}
+                width={5.4}
+                height={3.6}
                 color={THEME.accent}
                 htmlWidth={290}
                 html={
@@ -163,10 +163,10 @@ export function Glacius() {
           <RevealMount at={0.62}>
             <group position={dishPos}>
               <HoloPanel
-                width={8.4}
-                height={5.4}
+                width={6}
+                height={4}
                 color={THEME.accent}
-                htmlWidth={336}
+                htmlWidth={310}
                 occlude={false}
                 html={
                   <div className="holo-card">

@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useTravelStore } from "@/lib/store";
 import { V_MAX } from "@/lib/flight/constants";
+import { WAYPOINT_BY_ID } from "@/lib/flight/path";
 import {
   DO_NOT_PRESS_LABEL,
   RETRO_THRUSTER_NOTE,
@@ -42,7 +43,18 @@ export function VelocityReadout() {
       last = t;
       const state = useTravelStore.getState();
       const sim = state.sim;
-      const v = state.mode === "WARP" ? V_MAX * 4040 : Math.abs(sim.v);
+      // In orbit the linear sim idles — report tangential speed instead.
+      const orbiting =
+        state.mode === "ORBIT" || state.mode === "ORBIT_INSERT";
+      const w = state.currentPlanet
+        ? WAYPOINT_BY_ID[state.currentPlanet]
+        : null;
+      const v =
+        state.mode === "WARP"
+          ? V_MAX * 4040
+          : orbiting && w
+            ? Math.abs(sim.orbitAngV) * w.orbitRadius
+            : Math.abs(sim.v);
       setSpeed(v);
       // Variable-weight display font tracks velocity (300 rest -> 800 burn).
       const wght =

@@ -124,40 +124,41 @@ function Astronaut() {
 }
 
 function HeroContent() {
-  const namePos = useOrbitPos(W, 0.45, 1.35, 3.2);
-  const statusPos = useOrbitPos(W, 0.45, 1.35, 1.6);
-  const taglinePos = useOrbitPos(W, 0.85, 1.3, 2.4);
-  const badgePos = useOrbitPos(W, 1.5, 1.35, 2.8);
-  const hintPos = useOrbitPos(W, 0.1, 1.5, -2.2);
-  const finalHintPos = useOrbitPos(W, 2.2, 1.4, 1.8);
+  // Headings hover above the planet's pole — always in frame while orbiting.
+  const namePos = useOrbitPos(W, 0, 0, 8.6);
+  const statusPos = useOrbitPos(W, 0, 0, 7.3);
+  const taglinePos = useOrbitPos(W, 0.95, 1.2, 3.8);
+  const badgePos = useOrbitPos(W, 1.5, 1.25, 3.2);
+  const hintPos = useOrbitPos(W, 0.05, 1.3, -3.0);
+  const finalHintPos = useOrbitPos(W, 2.2, 1.3, 2.6);
 
   return (
     <>
       <Reveal at={0.02} position={namePos}>
-        <HoloText font={FONT_DISPLAY} size={1.5} color="#ffffff" emissive>
+        <HoloText font={FONT_DISPLAY} size={0.62} color="#ffffff" emissive maxWidth={12}>
           {IDENTITY.name}
         </HoloText>
       </Reveal>
       <Reveal at={0.06} position={statusPos}>
-        <HoloText font={FONT_MONO} size={0.52} color={THEME.accent}>
+        <HoloText font={FONT_MONO} size={0.3} color={THEME.accent}>
           {`● ${IDENTITY.status}`}
         </HoloText>
       </Reveal>
       <Reveal at={0.02} position={hintPos}>
-        <HoloText font={FONT_MONO} size={0.34} color="#8a90ad" maxWidth={10}>
+        <HoloText font={FONT_MONO} size={0.22} color="#8a90ad" maxWidth={6.5}>
           {SCROLL_HINT}
         </HoloText>
       </Reveal>
       <Reveal at={0.3} position={taglinePos}>
-        <HoloText font={FONT_BODY} size={0.7} color="#e8eaf6" maxWidth={11}>
+        <HoloText font={FONT_BODY} size={0.4} color="#e8eaf6" maxWidth={8}>
           {IDENTITY.tagline}
         </HoloText>
       </Reveal>
       <RevealMount at={0.55}>
         <group position={badgePos}>
           <HoloPanel
-          width={5}
-          height={6}
+          width={3.6}
+          height={4.4}
           color={THEME.accent}
           htmlWidth={200}
           html={
@@ -184,7 +185,7 @@ function HeroContent() {
         </group>
       </RevealMount>
       <Reveal at={0.8} position={finalHintPos}>
-        <HoloText font={FONT_MONO} size={0.38} color="#8a90ad" maxWidth={10}>
+        <HoloText font={FONT_MONO} size={0.26} color="#8a90ad" maxWidth={7}>
           Click any planet (or the star map) to warp. Keep scrolling to cruise
           the long way — very scenic, zero traffic.
         </HoloText>
