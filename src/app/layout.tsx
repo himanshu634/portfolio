@@ -1,5 +1,17 @@
 import type { Metadata, Viewport } from "next";
 import { Fira_Code, Lora } from "next/font/google";
+// Self-hosted flight-deck typography (fontsource, font-display: swap).
+import "@fontsource/space-grotesk/400.css";
+import "@fontsource/space-grotesk/500.css";
+import "@fontsource/space-grotesk/700.css";
+import "@fontsource/jetbrains-mono/400.css";
+import "@fontsource/jetbrains-mono/500.css";
+import "@fontsource-variable/orbitron";
+import "@fontsource/fraunces/400.css";
+import "@fontsource/fraunces/600.css";
+import "@fontsource/chakra-petch/400.css";
+import "@fontsource/chakra-petch/600.css";
+import "@fontsource/quicksand/500.css";
 import "./globals.css";
 
 const firaCode = Fira_Code({

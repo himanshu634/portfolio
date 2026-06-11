@@ -9,6 +9,7 @@ export const metadata: Metadata = {
 };
 
 const EXCUSES = [
+  "You've drifted into uncharted space. Even Voyager knows where it is.",
   "You typed it right. I built it wrong.",
   "I might've deleted this page and forgotten. Classic me.",
   "This link worked when I last checked. I have not last checked.",
@@ -32,16 +33,18 @@ export default function NotFound() {
 
       <ExcuseShuffler excuses={EXCUSES} />
 
-      <div className="flex flex-wrap gap-8 justify-center mt-12">
+      <div className="flex flex-wrap gap-8 justify-center mt-12 items-center">
         <Link
           href="/"
-          className="group inline-flex items-center gap-2 font-mono text-foreground hover:text-muted transition-colors"
+          className="group inline-flex items-center gap-2 font-mono text-accent border border-accent/40 rounded-full px-5 py-2 hover:bg-accent/10 transition-colors"
         >
-          Take me home
-          <ArrowRight
-            className="w-4 h-4 transition-transform duration-300 group-hover:-rotate-45"
-            strokeWidth={1.5}
-          />
+          <span
+            aria-hidden="true"
+            className="inline-block transition-transform duration-500 group-hover:rotate-[360deg]"
+          >
+            ◎
+          </span>
+          Open emergency wormhole home
         </Link>
         <Link
           href="/blogs"

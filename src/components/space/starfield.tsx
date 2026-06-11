@@ -2,64 +2,186 @@
 
 import { useMemo, useRef } from "react";
 import * as THREE from "three";
-import { useFrame } from "@react-three/fiber";
-import { Stars } from "@react-three/drei";
+import { useFrame, useThree } from "@react-three/fiber";
+import { useTravelStore } from "@/lib/store";
+import { V_MAX } from "@/lib/flight/constants";
+import { FLIGHT_CURVE } from "@/lib/flight/path";
 
 /**
- * Two layers of stars: drei's far shell for density, plus a near-field
- * additive Points cloud spread along the flight path for parallax as
- * the camera travels into -z. The near layer is skipped on mobile.
+ * Parallax-true starfield:
+ *  - skybox layer: points on a sphere that follows the camera — zero
+ *    parallax, effectively at infinity
+ *  - far / mid / near layers scattered along the corridor with increasing
+ *    parallax; near dust streaks at speed via stretched line segments
  */
-export function Starfield({ quality }: { quality: "high" | "low" }) {
-  return (
-    <>
-      <Stars
-        radius={120}
-        depth={80}
-        count={quality === "high" ? 6000 : 3000}
-        factor={4}
-        saturation={0.4}
-        fade
-        speed={0.5}
-      />
-      {quality === "high" && <NearStars />}
-    </>
-  );
+
+function makeCorridorPoints(count: number, spread: number, seed: number) {
+  const positions = new Float32Array(count * 3);
+  let s = seed;
+  const rand = () => {
+    // mulberry32-ish — deterministic so SSR/HMR don't reshuffle
+    s |= 0;
+    s = (s + 0x6d2b79f5) | 0;
+    let t = Math.imul(s ^ (s >>> 15), 1 | s);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+  const point = new THREE.Vector3();
+  for (let i = 0; i < count; i++) {
+    FLIGHT_CURVE.getPointAt(rand(), point);
+    positions[i * 3] = point.x + (rand() - 0.5) * spread;
+    positions[i * 3 + 1] = point.y + (rand() - 0.5) * spread * 0.7;
+    positions[i * 3 + 2] = point.z + (rand() - 0.5) * spread;
+  }
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+  return geo;
 }
 
-function NearStars() {
+function SkyboxStars({ count }: { count: number }) {
   const ref = useRef<THREE.Points>(null);
-
+  const camera = useThree((s) => s.camera);
   const geometry = useMemo(() => {
-    const count = 1500;
     const positions = new Float32Array(count * 3);
     for (let i = 0; i < count; i++) {
-      positions[i * 3] = (Math.random() - 0.5) * 90;
-      positions[i * 3 + 1] = (Math.random() - 0.5) * 60;
-      positions[i * 3 + 2] = 20 - Math.random() * 240;
+      const v = new THREE.Vector3(
+        Math.random() - 0.5,
+        Math.random() - 0.5,
+        Math.random() - 0.5
+      )
+        .normalize()
+        .multiplyScalar(340);
+      positions[i * 3] = v.x;
+      positions[i * 3 + 1] = v.y;
+      positions[i * 3 + 2] = v.z;
     }
     const geo = new THREE.BufferGeometry();
     geo.setAttribute("position", new THREE.BufferAttribute(positions, 3));
     return geo;
-  }, []);
+  }, [count]);
 
-  useFrame((state) => {
-    if (!ref.current) return;
-    ref.current.rotation.z =
-      Math.sin(state.clock.elapsedTime * 0.02) * 0.02;
+  useFrame(() => {
+    // Stars at infinity: the shell rides with the camera, so they never parallax.
+    if (ref.current) ref.current.position.copy(camera.position);
   });
 
   return (
-    <points ref={ref} geometry={geometry}>
+    <points ref={ref} geometry={geometry} raycast={() => null} frustumCulled={false}>
       <pointsMaterial
-        size={0.18}
-        color="#bfd4ff"
+        size={0.7}
+        color="#aab4d8"
         transparent
-        opacity={0.8}
-        sizeAttenuation
-        blending={THREE.AdditiveBlending}
+        opacity={0.85}
+        sizeAttenuation={false}
         depthWrite={false}
+        fog={false}
       />
     </points>
+  );
+}
+
+/** Near dust that stretches into streaks as the ship picks up speed. */
+function SpeedLines({ count }: { count: number }) {
+  const group = useRef<THREE.Group>(null);
+  const matRef = useRef<THREE.LineBasicMaterial>(null);
+  const camera = useThree((s) => s.camera);
+
+  const geometry = useMemo(() => {
+    const positions = new Float32Array(count * 2 * 3);
+    for (let i = 0; i < count; i++) {
+      const x = (Math.random() - 0.5) * 40;
+      const y = (Math.random() - 0.5) * 26;
+      const z = -Math.random() * 60 - 4;
+      positions[i * 6] = x;
+      positions[i * 6 + 1] = y;
+      positions[i * 6 + 2] = z;
+      positions[i * 6 + 3] = x;
+      positions[i * 6 + 4] = y;
+      positions[i * 6 + 5] = z - 0.6;
+    }
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+    return geo;
+  }, [count]);
+
+  useFrame(() => {
+    const store = useTravelStore.getState();
+    const sim = store.sim;
+    const g = group.current;
+    if (!g) return;
+    const speedFrac = Math.min(Math.abs(sim.v) / V_MAX, 1);
+    const warp = store.mode === "WARP" && !store.reducedMotion;
+    const vis = warp ? 1 : speedFrac;
+    g.visible = vis > 0.25;
+    if (!g.visible) return;
+    g.position.copy(camera.position);
+    g.quaternion.copy(camera.quaternion);
+    // Streak length grows with velocity (warp pegs it).
+    g.scale.z = 1 + (warp ? 26 : speedFrac * 9);
+    if (matRef.current) {
+      matRef.current.opacity = warp ? 0.8 : (speedFrac - 0.25) * 0.7;
+    }
+  });
+
+  return (
+    <group ref={group} visible={false}>
+      <lineSegments geometry={geometry} raycast={() => null} frustumCulled={false}>
+        <lineBasicMaterial
+          ref={matRef}
+          color="#cfe0ff"
+          transparent
+          opacity={0}
+          blending={THREE.AdditiveBlending}
+          depthWrite={false}
+          fog={false}
+        />
+      </lineSegments>
+    </group>
+  );
+}
+
+export function Starfield({ quality }: { quality: "high" | "low" }) {
+  const high = quality === "high";
+  const far = useMemo(() => makeCorridorPoints(high ? 2400 : 1200, 280, 7), [high]);
+  const mid = useMemo(() => makeCorridorPoints(high ? 1400 : 700, 150, 23), [high]);
+  const near = useMemo(() => makeCorridorPoints(high ? 700 : 300, 70, 51), [high]);
+
+  return (
+    <>
+      <SkyboxStars count={high ? 1600 : 800} />
+      <points geometry={far} raycast={() => null}>
+        <pointsMaterial
+          size={0.5}
+          color="#8fa0cf"
+          transparent
+          opacity={0.6}
+          sizeAttenuation
+          depthWrite={false}
+        />
+      </points>
+      <points geometry={mid} raycast={() => null}>
+        <pointsMaterial
+          size={0.32}
+          color="#bfd4ff"
+          transparent
+          opacity={0.75}
+          sizeAttenuation
+          depthWrite={false}
+          blending={THREE.AdditiveBlending}
+        />
+      </points>
+      <points geometry={near} raycast={() => null}>
+        <pointsMaterial
+          size={0.16}
+          color="#e6eeff"
+          transparent
+          opacity={0.9}
+          sizeAttenuation
+          depthWrite={false}
+          blending={THREE.AdditiveBlending}
+        />
+      </points>
+      <SpeedLines count={high ? 240 : 120} />
+    </>
   );
 }

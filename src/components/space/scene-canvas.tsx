@@ -1,41 +1,54 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense } from "react";
 import { Canvas } from "@react-three/fiber";
-import { isMobileViewport } from "@/lib/journey";
-import { JourneyRig } from "./journey-rig";
+import { useTravelStore } from "@/lib/store";
+import type { PostShard } from "@/lib/content";
+import { FlightController } from "./flight/flight-controller";
+import { CameraRig } from "./flight/camera-rig";
+import { ShipRig } from "./flight/ship-rig";
 import { Starfield } from "./starfield";
-import { Planets } from "./planets";
-import { Nebula } from "./nebula";
+import { Nebula, SceneMood } from "./nebula";
+import { PlanetSystem } from "./planets";
+import { Wormhole } from "./warp/wormhole";
+import { Effects } from "./warp/effects";
+import { KonamiDuck } from "../easter-eggs/konami-duck";
 
 /**
- * Fixed full-screen 3D backdrop for the homepage voyage. Sits behind the
- * scrollable HTML content (z-0 vs z-10) and never intercepts pointer
- * events, so native scrolling, selection and a11y are untouched.
+ * The universe is the UI: a fixed full-screen canvas that owns all content
+ * rendering on the home route. Planets are clickable (warp targets), so the
+ * canvas receives pointer events; the few HUD widgets float above it.
+ *
+ * frameloop stays "always" — the physics needs continuous stepping, coasting
+ * ships keep coasting whether or not you're scrolling.
  */
-export default function SceneCanvas() {
-  const [quality] = useState<"high" | "low">(() =>
-    isMobileViewport() ? "low" : "high"
-  );
+export default function SceneCanvas({ posts }: { posts: PostShard[] }) {
+  const quality = useTravelStore((s) => s.quality);
 
   return (
-    <div
-      className="fixed inset-0 z-0 pointer-events-none"
-      aria-hidden="true"
-    >
+    <div className="fixed inset-0 z-0">
       <Canvas
-        dpr={[1, 1.75]}
+        dpr={quality === "high" ? [1, 1.75] : [1, 1.25]}
         gl={{ antialias: false, powerPreference: "high-performance" }}
-        camera={{ fov: 55, near: 0.1, far: 400, position: [0, 2.5, 18] }}
+        camera={{ fov: 60, near: 0.1, far: 700, position: [0, 4, 24] }}
+        frameloop="always"
       >
         <color attach="background" args={["#050510"]} />
-        <fog attach="fog" args={["#050510", 30, 160]} />
-        <ambientLight intensity={0.35} />
-        <directionalLight position={[15, 20, 10]} intensity={1.2} color="#cfd8ff" />
-        <Starfield quality={quality} />
-        <Nebula />
-        <Planets />
-        <JourneyRig quality={quality} />
+        <fog attach="fog" args={["#050510", 40, 260]} />
+        {/* Low ambient floor only — the sun owns the lighting. */}
+        <ambientLight intensity={0.05} />
+        <Suspense fallback={null}>
+          <SceneMood />
+          <Starfield quality={quality} />
+          <Nebula />
+          <PlanetSystem posts={posts} />
+          <FlightController />
+          <ShipRig quality={quality} />
+          <CameraRig />
+          <Wormhole />
+          <KonamiDuck />
+          <Effects quality={quality} />
+        </Suspense>
       </Canvas>
     </div>
   );
