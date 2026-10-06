@@ -38,26 +38,91 @@ const experiences: {
     content: (
       <>
         <p>
-          Seed-stage agritech in Ahmedabad. Small team, so I work across the
-          whole product, from the UI down to the database.
+          Seed-stage agritech in Ahmedabad. I lead engineering: I set the
+          architecture, review and merge every pull request, and write much of
+          the code myself, from the UI down to the database. In about nine
+          weeks the team merged ~470 pull requests across the app, the API and
+          the agents, covered by ~7,400 automated tests.
         </p>
         <Project name="Koshi">
           <li>
-            Gujarati-first app for agri-input retailers, the shops that sell
-            farmers seed, fertiliser and crop protection.
+            Android-first app for agri-input retailers in Gujarat, the shops
+            that sell farmers seed, fertiliser and crop protection. It helps a
+            shop win the second and third sale of every crop season.
           </li>
-          <li>Offline billing, a credit ledger, crop calendars and AI WhatsApp posters.</li>
-          <li>I built the Expo app, the Django API and the agents. v1.2.1 in 7 weeks.</li>
+          <li>
+            Billing works fully offline on weak rural networks. Queued bills
+            sync later with no duplicates and no gaps in invoice numbers.
+          </li>
+          <li>
+            Crop calendars place each farmer on a crop stage, so the shop knows
+            who needs what next. Reminders and posters go out on WhatsApp from
+            the retailer&apos;s own phone.
+          </li>
+          <li>
+            Gujarati first: 1,945 translated strings, and village data for all
+            18,512 villages in the state.
+          </li>
+          <li>
+            I built the Expo app, the Django and Postgres API, and the GCP
+            infrastructure. First commit to v1.2.1 in seven weeks: 18
+            releases, ~395 merged pull requests and ~5,400 tests.
+          </li>
+          <li>
+            Model-checked the crop-calendar engine with TLA+. It found a
+            database deadlock and three race conditions before launch.
+          </li>
+          <li>
+            Deploys run through Cloud Build and roll back automatically when a
+            health check fails.
+          </li>
         </Project>
-        <Project name="Agent platform">
-          <li>Pub/Sub and LangGraph runtime with a human approval step.</li>
-          <li>Runs poster, product-onboarding and logo agents on Gemini.</li>
-          <li>Poster text is checked against OCR, so a price can&apos;t ship wrong.</li>
+        <Project name="AI agent platform">
+          <li>
+            Four agents on one Pub/Sub and LangGraph runtime. A human approval
+            step can send work back without paying again for the steps that
+            already finished.
+          </li>
+          <li>
+            Poster agent: Gujarati marketing posters on Gemini across 10
+            templates. Every line is read back with OCR, so a wrong price or
+            phone number can&apos;t ship.
+          </li>
+          <li>
+            Product agent: two photos of a pack become a product listing and a
+            clean packshot. Uses found on the web are kept only when the label
+            confirms them.
+          </li>
+          <li>
+            Logo agent: draws a shop logo from one photo, which the retailer
+            approves or sends back for a redraw.
+          </li>
+          <li>
+            The team built the first poster engine and the prototypes for label
+            reading, voice notes and brand kits. I moved them onto the shared
+            runtime and hardened them. ~2,000 tests run in CI on every pull
+            request.
+          </li>
         </Project>
         <Project name="Lead ingestion">
           <li>
-            Telegram sell offers flow into the CRM through a Celery queue, with
-            gap recovery and idempotent writes.
+            Farmers post castor and cotton sell offers in Telegram groups. An
+            agent reads each one with Gemini and files it as a lead for the
+            right procurement center in our CRM.
+          </li>
+          <li>
+            A teammate built the first version. I moved it onto a Celery and
+            Redis queue that recovers missed messages after a restart and never
+            files the same lead twice.
+          </li>
+        </Project>
+        <Project name="Koshi website">
+          <li>
+            Landing page in SvelteKit and GSAP, deployed to Firebase Hosting.
+          </li>
+          <li>
+            A teammate built the sign-up form behind our Meta ads, which scores
+            each lead out of 100 in a shared sheet.
           </li>
         </Project>
         <Project name="Supply-chain platform">
