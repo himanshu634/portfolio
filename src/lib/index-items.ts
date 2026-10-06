@@ -37,7 +37,7 @@ const ITEMS: IndexItem[] = [
   {
     kind: "work",
     title: "Tech Lead, Bull Agritech",
-    description: "Farmer-to-processor supply chain, an agent-run CRM, and Koshi.",
+    description: "Koshi, an AI agent platform, and a farmer-to-processor supply chain.",
     // TODO: start year unknown; the row shows "Now" so it isn't displayed.
     year: 2026,
     now: true,

@@ -41,23 +41,30 @@ const experiences: {
           Seed-stage agritech in Ahmedabad. Small team, so I work across the
           whole product, from the UI down to the database.
         </p>
+        <Project name="Koshi">
+          <li>
+            Gujarati-first app for agri-input retailers, the shops that sell
+            farmers seed, fertiliser and crop protection.
+          </li>
+          <li>Offline billing, a credit ledger, crop calendars and AI WhatsApp posters.</li>
+          <li>I built the Expo app, the Django API and the agents. v1.2.1 in 7 weeks.</li>
+        </Project>
+        <Project name="Agent platform">
+          <li>Pub/Sub and LangGraph runtime with a human approval step.</li>
+          <li>Runs poster, product-onboarding and logo agents on Gemini.</li>
+          <li>Poster text is checked against OCR, so a price can&apos;t ship wrong.</li>
+        </Project>
+        <Project name="Lead ingestion">
+          <li>
+            Telegram sell offers flow into the CRM through a Celery queue, with
+            gap recovery and idempotent writes.
+          </li>
+        </Project>
         <Project name="Supply-chain platform">
           <li>
             Connects farmers directly to commodity processors, and handles
             price discovery, logistics, quality checks and payment protection
             in between.
-          </li>
-        </Project>
-        <Project name="Agent-run CRM">
-          <li>
-            Our internal CRM, where several agents, each with its own job,
-            manage the lead pipeline.
-          </li>
-        </Project>
-        <Project name="Koshi">
-          <li>
-            Next up: an AI app for agro retailers, the shops that sell farmers
-            seeds, fertiliser and crop protection.
           </li>
         </Project>
       </>
