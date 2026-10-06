@@ -30,14 +30,14 @@ export function ExcuseShuffler({ excuses }: { excuses: string[] }) {
     <div className="flex flex-col items-center gap-4">
       <p
         key={index}
-        className="text-muted italic max-w-md text-base sm:text-lg leading-relaxed animate-[fadeIn_0.3s_ease-in]"
+        className="font-medium max-w-md text-base sm:text-lg leading-relaxed animate-[fadeIn_0.3s_ease-in]"
       >
         “{excuses[index]}”
       </p>
       {excuses.length > 1 && (
         <button
           onClick={shuffle}
-          className="group inline-flex items-center gap-2 font-mono text-sm text-muted hover:text-foreground transition-colors"
+          className="group inline-flex items-center gap-2 py-3 text-sm font-semibold hover:bg-now"
         >
           <RotateCw
             className="w-3.5 h-3.5 transition-transform duration-500 group-hover:rotate-180"

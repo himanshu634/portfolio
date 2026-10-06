@@ -1,13 +1,6 @@
 import { ReactNode } from "react";
-import { Header } from "@/components/header";
+import { Shell } from "@/components/shell";
 
 export default function BlogLayout({ children }: { children: ReactNode }) {
-  return (
-    <>
-      <Header />
-      <main className="max-w-[680px] mx-auto px-4 pb-20">
-        {children}
-      </main>
-    </>
-  );
+  return <Shell current="writing">{children}</Shell>;
 }

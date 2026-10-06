@@ -20,13 +20,13 @@ const EXCUSES = [
 export default function NotFound() {
   return (
     <main className="min-h-screen flex flex-col items-center justify-center text-center px-4 py-16">
-      <p className="font-mono text-sm text-muted mb-4">Error 404</p>
+      <p className="text-sm font-semibold mb-4">Error 404</p>
 
-      <h1 className="font-mono text-7xl sm:text-8xl font-semibold tracking-tight mb-6 photo-wiggle cursor-default select-none">
+      <h1 className="type-display mb-6 text-[9rem] sm:text-[12rem] select-none">
         404
       </h1>
 
-      <h2 className="text-2xl sm:text-3xl font-semibold mb-6">
+      <h2 className="text-2xl sm:text-3xl font-extrabold mb-6">
         Well, this is awkward.
       </h2>
 
@@ -35,7 +35,7 @@ export default function NotFound() {
       <div className="flex flex-wrap gap-8 justify-center mt-12">
         <Link
           href="/"
-          className="group inline-flex items-center gap-2 font-mono text-foreground hover:text-muted transition-colors"
+          className="group inline-flex items-center gap-2 py-3 font-bold underline decoration-2 underline-offset-4 hover:bg-now"
         >
           Take me home
           <ArrowRight
@@ -45,7 +45,7 @@ export default function NotFound() {
         </Link>
         <Link
           href="/blogs"
-          className="group inline-flex items-center gap-2 font-mono text-foreground hover:text-muted transition-colors"
+          className="group inline-flex items-center gap-2 py-3 font-bold underline decoration-2 underline-offset-4 hover:bg-now"
         >
           Read something instead
           <ArrowRight

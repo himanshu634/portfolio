@@ -17,7 +17,7 @@ export function MDXImage({
 }: MDXImageProps) {
   return (
     <figure className="my-8">
-      <div className="relative w-full rounded-lg overflow-hidden border border-accent-2">
+      <div className="relative w-full overflow-hidden border-2 border-border">
         <Image
           src={src}
           alt={alt}
@@ -27,7 +27,7 @@ export function MDXImage({
         />
       </div>
       {caption && (
-        <figcaption className="text-center text-sm text-accent-2 mt-2 italic">
+        <figcaption className="mt-2 text-sm text-muted">
           {caption}
         </figcaption>
       )}

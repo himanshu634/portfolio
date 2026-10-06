@@ -1,11 +1,15 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+/* Brutalist "index" look: white ground, black ink and 2px rules, one amber
+   for what is live now. Archivo carries everything; its width axis gives the
+   condensed display cut. Fira Code is kept for code only. */
 :root {
-  --background: #faf8f5;
-  --foreground: #1a1a1a;
-  --muted: #5a5a5a;
-  --border: #e8e4de;
+  --background: #ffffff;
+  --foreground: #000000;
+  --muted: #4d4d4d;
+  --border: #000000;
+  --now: #ffb000;
 }
 
 @theme inline {
@@ -13,10 +17,20 @@
   --color-foreground: var(--foreground);
   --color-muted: var(--muted);
   --color-border: var(--border);
+  --color-now: var(--now);
 
-  --font-sans: var(--font-lora);
+  --font-sans: var(--font-archivo);
   --font-mono: var(--font-fira-code);
-  --font-ui: var(--font-fira-code);
+}
+
+/* The condensed, heavy, upper-case cut used for the name, page titles and post headings. */
+@utility type-display {
+  font-family: var(--font-archivo), sans-serif;
+  font-weight: 900;
+  font-stretch: 62%;
+  text-transform: uppercase;
+  line-height: 0.9;
+  letter-spacing: -0.01em;
 }
 
 * {
@@ -26,14 +40,11 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-lora), Georgia, serif;
-  line-height: 1.7;
-  letter-spacing: 0.01em;
-  animation: fadeIn 0.4s ease-in;
+  font-family: var(--font-archivo), sans-serif;
+  line-height: 1.5;
 }
 
-/* UI elements stay monospace */
-nav, header, footer, time, code, pre, kbd {
+code, pre, kbd {
   font-family: var(--font-fira-code), monospace;
 }
 
@@ -42,92 +53,64 @@ nav, header, footer, time, code, pre, kbd {
   to { opacity: 1; }
 }
 
-@keyframes wiggle {
-  0%   { transform: rotate(0deg) scale(1); }
-  20%  { transform: rotate(-4deg) scale(1.06); }
-  40%  { transform: rotate(3deg) scale(1.07); }
-  60%  { transform: rotate(-2deg) scale(1.05); }
-  80%  { transform: rotate(1deg) scale(1.04); }
-  100% { transform: rotate(0deg) scale(1); }
-}
-
-.photo-wiggle:hover {
-  animation: wiggle 0.5s ease-in-out;
-}
-
-/* Selection styles */
 ::selection {
-  background: var(--foreground);
-  color: var(--background);
+  background: var(--now);
+  color: var(--foreground);
 }
 
-::-moz-selection {
-  background: var(--foreground);
-  color: var(--background);
-}
-
-/* Focus styles for accessibility */
-button:focus,
-input:focus,
-textarea:focus {
-  outline: 2px solid var(--foreground);
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid var(--foreground);
   outline-offset: 2px;
 }
 
-/* Link transitions */
-a {
-  transition: color 0.15s ease, opacity 0.15s ease;
+@media (prefers-reduced-motion: reduce) {
+  * {
+    scroll-behavior: auto;
+    animation: none !important;
+    transition: none !important;
+  }
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 4px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--background);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--border);
-  border-radius: 2px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--muted);
-}
-
-html {
-  scrollbar-width: thin;
-  scrollbar-color: var(--border) var(--background);
-}
-
-/* MDX Content — Lora for reading */
+/* MDX content: 19px Archivo for reading, condensed display for h2 */
 .mdx-content {
   color: var(--foreground);
-  font-family: var(--font-lora), Georgia, serif;
-  font-size: 0.9375rem;
-  line-height: 1.75;
+  font-size: 1.1875rem;
+  line-height: 1.6;
 }
 
 .mdx-content p {
-  margin-bottom: 1.35rem;
+  margin-bottom: 1.4rem;
 }
 
 .mdx-content h1,
-.mdx-content h2,
-.mdx-content h3,
-.mdx-content h4 {
-  font-family: var(--font-lora), Georgia, serif;
-  font-weight: 700;
-  line-height: 1.3;
-  margin-top: 2rem;
-  margin-bottom: 0.75rem;
+.mdx-content h2 {
+  font-weight: 900;
+  font-stretch: 62%;
+  text-transform: uppercase;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  margin-top: 3rem;
+  margin-bottom: 1rem;
+  scroll-margin-top: 1.5rem;
 }
 
-.mdx-content h1 { font-size: 1.25rem; }
-.mdx-content h2 { font-size: 1.05rem; }
-.mdx-content h3 { font-size: 0.9rem; }
+.mdx-content h1 { font-size: 3rem; }
+.mdx-content h2 { font-size: 2.5rem; }
+
+.mdx-content h3,
+.mdx-content h4 {
+  font-weight: 800;
+  line-height: 1.25;
+  margin-top: 2.25rem;
+  margin-bottom: 0.75rem;
+  scroll-margin-top: 1.5rem;
+}
+
+.mdx-content h3 { font-size: 1.5rem; }
+.mdx-content h4 { font-size: 1.25rem; }
 
 .mdx-content ul,
 .mdx-content ol {
@@ -135,12 +118,15 @@ html {
   padding-left: 1.5rem;
 }
 
+.mdx-content ul { list-style: square; }
+.mdx-content ol { list-style: decimal; }
+
 .mdx-content li {
   margin-bottom: 0.5rem;
 }
 
 .mdx-content strong {
-  font-weight: 700;
+  font-weight: 800;
 }
 
 .mdx-content em {
@@ -149,11 +135,12 @@ html {
 
 .mdx-content a {
   text-decoration: underline;
+  text-decoration-thickness: 2px;
   text-underline-offset: 3px;
 }
 
 .mdx-content a:hover {
-  opacity: 0.7;
+  background: var(--now);
 }
 
 .mdx-content h1 a,
@@ -163,17 +150,23 @@ html {
   text-decoration: none;
 }
 
+.mdx-content h1 a:hover,
+.mdx-content h2 a:hover,
+.mdx-content h3 a:hover,
+.mdx-content h4 a:hover {
+  background: transparent;
+}
+
 .mdx-content blockquote {
-  border-left: 3px solid var(--border);
+  border-left: 6px solid var(--border);
   padding-left: 1.25rem;
   margin: 2rem 0;
-  color: var(--muted);
-  font-style: italic;
+  font-weight: 500;
 }
 
 .mdx-content hr {
   border: none;
-  border-top: 1px solid var(--border);
+  border-top: 2px solid var(--border);
   margin: 2.5rem 0;
 }
 
@@ -181,23 +174,22 @@ html {
   width: 100%;
   border-collapse: collapse;
   margin: 1.5rem 0;
-  font-family: var(--font-fira-code), monospace;
-  font-size: 0.9rem;
+  font-size: 1rem;
 }
 
 .mdx-content th,
 .mdx-content td {
-  border: 1px solid var(--border);
+  border: 2px solid var(--border);
   padding: 0.6rem 0.9rem;
   text-align: left;
 }
 
 .mdx-content th {
-  font-weight: 600;
-  background: color-mix(in srgb, var(--border) 40%, transparent);
+  font-weight: 700;
+  background: var(--foreground);
+  color: var(--background);
 }
 
-/* Code stays monospace */
 .mdx-content pre,
 .mdx-content code {
   font-family: var(--font-fira-code), monospace;

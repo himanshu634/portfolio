@@ -1,6 +1,13 @@
 import type { Metadata } from "next";
-import { Fira_Code, Lora } from "next/font/google";
+import { Archivo, Fira_Code } from "next/font/google";
 import "./globals.css";
+
+const archivo = Archivo({
+  variable: "--font-archivo",
+  axes: ["wdth"],
+  subsets: ["latin"],
+  fallback: ["Arial Narrow", "sans-serif"],
+});
 
 const firaCode = Fira_Code({
   variable: "--font-fira-code",
@@ -9,18 +16,10 @@ const firaCode = Fira_Code({
   fallback: ["monospace"],
 });
 
-const lora = Lora({
-  variable: "--font-lora",
-  weight: ["400", "500", "600", "700"],
-  style: ["normal", "italic"],
-  subsets: ["latin"],
-  fallback: ["Georgia", "serif"],
-});
-
 export const metadata: Metadata = {
   title: "Himanshu Mendapara",
   description:
-    "Software Engineer. Often found experimenting with new tech. Currently exploring Rust.",
+    "Tech lead at Bull Agritech in Ahmedabad. I build AI for money and markets.",
 };
 
 export default function RootLayout({
@@ -30,7 +29,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${firaCode.variable} ${lora.variable} antialiased`}>
+      <body className={`${archivo.variable} ${firaCode.variable} antialiased`}>
         {children}
       </body>
     </html>

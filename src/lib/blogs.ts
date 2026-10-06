@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
+import GithubSlugger from "github-slugger";
 
 export interface BlogPost {
   slug: string;
@@ -69,4 +70,25 @@ export function getBlogPostBySlug(slug: string) {
     },
     content,
   };
+}
+
+/**
+ * The post's h2s, with the ids rehype-slug gives them. Every heading is slugged
+ * in order (as rehype-slug does) so repeated titles get the same "-1" suffixes.
+ */
+export function getPostSections(content: string): { id: string; title: string }[] {
+  const slugger = new GithubSlugger();
+  const sections: { id: string; title: string }[] = [];
+  let inFence = false;
+
+  for (const line of content.split("\n")) {
+    if (/^\s*(```|~~~)/.test(line)) inFence = !inFence;
+    if (inFence) continue;
+    const match = /^(#{1,6})\s+(.+?)\s*#*\s*$/.exec(line);
+    if (!match) continue;
+    const title = match[2].replace(/[*_`]/g, "");
+    const id = slugger.slug(title);
+    if (match[1].length === 2) sections.push({ id, title });
+  }
+  return sections;
 }

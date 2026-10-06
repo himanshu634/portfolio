@@ -1,69 +1,49 @@
-"use client";
+import { ScrollToTop } from "@/components/scroll-to-top";
 
-import Link from "next/link";
-import { useEffect, useState } from "react";
+export const CONTACT_LINKS = [
+  { label: "Email", href: "mailto:himanshumendapra@gmail.com" },
+  { label: "GitHub", href: "https://github.com/himanshu634" },
+  {
+    label: "LinkedIn",
+    href: "https://www.linkedin.com/in/himanshu-mendapara-a732051aa/",
+  },
+  { label: "X", href: "https://x.com/himanshu_btw" },
+];
 
-function ScrollToTop() {
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const onScroll = () => setVisible(window.scrollY > 200);
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  return visible ? (
-    <button
-      onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-      className="text-muted hover:text-foreground transition-colors text-sm"
-      aria-label="Go to top"
-    >
-      ↑ top
-    </button>
-  ) : null;
+export function ContactLinks({ className = "" }: { className?: string }) {
+  return (
+    <ul className={`flex flex-wrap gap-x-5 font-semibold ${className}`}>
+      {CONTACT_LINKS.map(({ label, href }) => (
+        <li key={label}>
+          <a
+            href={href}
+            {...(href.startsWith("http")
+              ? { target: "_blank", rel: "noopener noreferrer" }
+              : {})}
+            className="inline-block py-3 underline decoration-2 underline-offset-[3px] hover:bg-now"
+          >
+            {label}
+          </a>
+        </li>
+      ))}
+    </ul>
+  );
 }
 
-export function Footer() {
+/** `showContact={false}` on the home page, whose lede row already lists the links. */
+export function Footer({ showContact = true }: { showContact?: boolean }) {
   return (
-    <footer className="border-t border-border py-8 mt-12">
-      <div className="flex flex-wrap items-center justify-between gap-4 text-sm text-muted">
-        <p>© 2025 Himanshu Mendapara</p>
-        <div className="flex items-center gap-4">
-          <Link
-            href="https://github.com/himanshu634"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-foreground transition-colors"
-          >
-            GitHub
-          </Link>
-          <Link
-            href="https://x.com/himanshu_btw"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-foreground transition-colors"
-          >
-            X
-          </Link>
-          <Link
-            href="https://www.linkedin.com/in/himanshu-mendapara-a732051aa/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-foreground transition-colors"
-          >
-            LinkedIn
-          </Link>
-          <Link
-            href="mailto:himanshumendapra@gmail.com"
-            className="hover:text-foreground transition-colors"
-          >
-            Email
-          </Link>
-          <ScrollToTop />
-        </div>
+    <footer
+      id={showContact ? "contact" : undefined}
+      className="mt-16 flex flex-wrap items-center justify-between gap-x-8 border-t-2 border-border py-6 text-[15px]"
+    >
+      <p className="font-semibold">
+        © {new Date().getFullYear()} Himanshu Mendapara, Ahmedabad
+      </p>
+      <div className="flex flex-wrap items-center gap-x-8">
+        {showContact && <ContactLinks />}
+        <ScrollToTop />
       </div>
     </footer>
   );
 }
-
-export default Footer;

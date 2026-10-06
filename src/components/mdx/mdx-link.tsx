@@ -12,7 +12,6 @@ export function MDXLink({
     return (
       <a
         href={href}
-        className="text-accent-blue hover:underline underline-offset-2"
         target="_blank"
         rel="noopener noreferrer"
         {...props}
@@ -25,7 +24,6 @@ export function MDXLink({
   return (
     <Link
       href={href || "#"}
-      className="hover:underline underline-offset-2"
       {...props}
     >
       {children}

@@ -17,7 +17,9 @@ Nothing under `src/`, `content/` or `public/` changes before a pick. The canvas 
 
 ## What the site is
 
-A personal site for Himanshu Mendapara — a software engineer (tech lead, agritech). Who reads it: recruiters and hiring managers skimming in under a minute, engineers checking the work and the writing, and people arriving on a single blog post from a link. The design language is quiet and editorial (the "Mitchell-inspired" redesign, PR #5): warm paper background, near-black ink, one muted grey, hairline borders, **Lora** for reading, **Fira Code** for UI chrome (nav, header, footer, dates, code), a single 680 px column, almost no colour, motion only as small hover moments (the photo wiggle, the arrow that turns −45°).
+A personal site for Himanshu Mendapara — a software engineer (tech lead, agritech). Who reads it: recruiters and hiring managers skimming in under a minute, engineers checking the work and the writing, and people arriving on a single blog post from a link. The design language is brutalist, "the index" (direction B, October 2026; it replaced the quiet editorial "Mitchell-inspired" look of PR #5): white ground, black ink, 2 px black rules that stop at the side margins, one amber (`--now`) for what is live now and for hover, **Archivo** for everything with its width axis giving the condensed upper-case display cut (`type-display`), **Fira Code** for code only, square corners, no shadows. The home page is one ruled table of every role, project, post and contribution, filterable by kind; /work keeps the detail.
+
+The frame kit in `assets/kit/` still draws the old editorial look; rebuild its tokens and anatomy from `globals.css` and the live pages before the next round.
 
 Those choices are deliberate. Spend a direction's boldness on **structure, hierarchy, what comes first, the signature moment and the copy** — not on a new palette or typeface, unless the user asks for a new look or one direction is explicitly "what if the palette changed" (and say so).
 

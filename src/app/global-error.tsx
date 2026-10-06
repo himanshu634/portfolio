@@ -30,9 +30,9 @@ export default function GlobalError({
           justifyContent: "center",
           textAlign: "center",
           padding: "1rem",
-          background: "#faf8f5",
-          color: "#1a1a1a",
-          fontFamily: "Georgia, serif",
+          background: "#ffffff",
+          color: "#000000",
+          fontFamily: "Arial, sans-serif",
           lineHeight: 1.6,
         }}
       >
@@ -41,7 +41,7 @@ export default function GlobalError({
             style={{
               fontFamily: "monospace",
               fontSize: "0.875rem",
-              color: "#5a5a5a",
+              color: "#4d4d4d",
               margin: 0,
             }}
           >
@@ -58,7 +58,7 @@ export default function GlobalError({
             Well. The whole thing fell over.
           </h1>
 
-          <p style={{ color: "#5a5a5a", margin: "0 auto", maxWidth: "28rem" }}>
+          <p style={{ color: "#4d4d4d", margin: "0 auto", maxWidth: "28rem" }}>
             This is the error page for when the error page would&apos;ve errored.
             We&apos;ve officially hit the bottom. I&apos;ll go fix it — you try
             turning it off and on again.
@@ -71,10 +71,10 @@ export default function GlobalError({
               fontSize: "0.875rem",
               marginTop: "1.75rem",
               padding: "0.6rem 1.25rem",
-              background: "#1a1a1a",
-              color: "#faf8f5",
-              border: "none",
-              borderRadius: "0.5rem",
+              background: "#000000",
+              color: "#ffffff",
+              border: "2px solid #000000",
+              borderRadius: 0,
               cursor: "pointer",
             }}
           >

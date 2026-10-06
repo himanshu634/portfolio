@@ -9,10 +9,10 @@ interface CalloutProps {
 }
 
 const typeStyles: Record<CalloutType, string> = {
-  info: "bg-border/30 text-foreground",
-  warning: "bg-border/30 text-foreground",
-  success: "bg-border/20 text-foreground",
-  error: "bg-border/40 text-foreground",
+  info: "bg-background",
+  warning: "bg-now",
+  success: "bg-background",
+  error: "bg-foreground text-background",
 };
 
 const typeIcons: Record<
@@ -30,8 +30,8 @@ export function Callout({ type = "info", children }: CalloutProps) {
 
   return (
     <div
-      className={`my-4 p-4 rounded-lg ${typeStyles[type]}`}
-      role="alert"
+      className={`my-6 border-2 border-border p-4 ${typeStyles[type]}`}
+      role="note"
     >
       <div className="flex gap-2">
         <Icon className="w-5 h-5 mt-0.5 flex-shrink-0" aria-hidden="true" />
