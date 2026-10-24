@@ -1,11 +1,11 @@
 import Link from "next/link";
 
-export type Section = "home" | "work" | "writing";
+export type Section = "home" | "work" | "projects" | "writing";
 
 export function Header({ current }: { current?: Section }) {
   const linkClass = (section?: Section) =>
     `py-3 hover:bg-now ${
-      current === section
+      section && current === section
         ? "underline decoration-2 underline-offset-4"
         : "no-underline"
     }`;
@@ -34,7 +34,11 @@ export function Header({ current }: { current?: Section }) {
           {/* A plain anchor: next/link changes the hash without a hashchange event,
               so on the home page the index would not switch to Projects. */}
           {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
-          <a href="/#projects" className={linkClass()}>
+          <a
+            href="/#projects"
+            className={linkClass("projects")}
+            aria-current={current === "projects" ? "page" : undefined}
+          >
             Projects
           </a>
           <Link

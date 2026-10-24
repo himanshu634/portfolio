@@ -13,7 +13,7 @@ export function Ext({ href, children }: { href: string; children: ReactNode }) {
   );
 }
 
-function Project({ name, children }: { name: ReactNode; children: ReactNode }) {
+export function Project({ name, children }: { name: ReactNode; children: ReactNode }) {
   return (
     <div className="mt-6">
       <h4 className="mb-2 text-lg font-bold">{name}</h4>
