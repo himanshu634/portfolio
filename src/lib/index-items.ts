@@ -113,17 +113,19 @@ const ITEMS: IndexItem[] = [
   },
 ];
 
-/** Every item, newest first: live items, then by year, posts ahead of the rest within a year. */
+/** Every item, newest first: featured posts and live items, then by year, posts ahead of the rest within a year. */
 export function getIndexItems(posts: BlogPost[]): IndexItem[] {
   const postItems: IndexItem[] = posts.map((post) => ({
     kind: "writing",
     title: post.title,
+    description: post.featured ? post.description : undefined,
     year: new Date(post.date).getFullYear(),
+    featured: post.featured,
     href: `/blog/${post.slug}`,
     linkLabel: post.readTime ? `Post, ${post.readTime.replace(" read", "")}` : "Post",
   }));
 
-  const rank = (item: IndexItem) => [item.now ? 1 : 0, item.year, item.kind === "writing" ? 1 : 0];
+  const rank = (item: IndexItem) => [item.featured ? 2 : item.now ? 1 : 0, item.year, item.kind === "writing" ? 1 : 0];
 
   return [...postItems, ...ITEMS].sort((a, b) => {
     const [ra, rb] = [rank(a), rank(b)];

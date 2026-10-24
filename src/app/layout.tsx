@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Archivo, Fira_Code } from "next/font/google";
+import { Archivo, Fira_Code, Noto_Sans_Gujarati } from "next/font/google";
 import "./globals.css";
 
 const archivo = Archivo({
@@ -16,6 +16,14 @@ const firaCode = Fira_Code({
   fallback: ["monospace"],
 });
 
+// Archivo and Fira Code have no Gujarati. Listed after them, this one only
+// draws Gujarati glyphs, and its unicode-range keeps it off pages without any.
+const notoGujarati = Noto_Sans_Gujarati({
+  variable: "--font-gujarati",
+  subsets: ["gujarati"],
+  preload: false,
+});
+
 export const metadata: Metadata = {
   title: "Himanshu Mendapara",
   description:
@@ -29,7 +37,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${archivo.variable} ${firaCode.variable} antialiased`}>
+      <body className={`${archivo.variable} ${firaCode.variable} ${notoGujarati.variable} antialiased`}>
         {children}
       </body>
     </html>

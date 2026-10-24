@@ -1,0 +1,109 @@
+---
+title: "An image model that paints well and can't be trusted with Gujarati"
+description: "Shops need posters now, so we built a harness that lets today's model do the drawing and the reading, and lets code decide what ships."
+date: "2026-10-24"
+readTime: "9 min read"
+tags: ["ai", "image generation", "gujarati", "evals", "koshi"]
+featured: true
+---
+
+A shop in a Gujarat village that sells seeds and crop protection has a new pesticide in stock. Its customers are farmers who read Gujarati and keep up with the shop on WhatsApp. The owner wants to tell them today, with a poster that shows the pack, the price and the shop's phone number.
+
+KOSHI, the app we build at Bull Agritech for shops like this one, makes that poster. The owner picks a template, such as an offer or a new arrival, chooses the product, and can record a voice note about it. A few minutes later KOSHI hands back a poster in Gujarati and a WhatsApp message to send with it.
+
+KOSHI has to know the product first. The owner photographs the front and back of the pack, and KOSHI fills in the record: the brand, the active ingredient and its strength, and the maker. It also makes a clean product photo for the poster.
+
+![The shop owner photographs a pack and picks a template; KOSHI reads the label, draws a Gujarati poster and writes a WhatsApp message](diagrams/koshi-use-case.png)
+
+*Two jobs for generative models: read the pack, then draw the poster.*
+
+## The problem: Gujarati text trips up the model
+
+We draw the posters with Gemini 3 Pro Image. It composes a good scene, with rich colour, light behind the pack and a clear layout. The text lets it down. [Google's documentation for the model](https://docs.cloud.google.com/vertex-ai/generative-ai/docs/multimodal/gemini-image-generation-limitations) lists the languages it handles best, and Gujarati is missing from that list. The same page suggests generating the text on its own.
+
+Gujarati script makes the job hard. It stacks consonants into conjuncts such as ક્ષ and શ્રી, and vowel signs sit above, below or beside the letter they modify. An image model draws all of it as pixels, without a font. One stroke in the wrong place gives you a different word, or no word at all.
+
+We measured it. In an October test gallery of 25 posters, 1 of 20 product posters had every line right on the first try. The 25 posters took 34 failed tries between them. In 13, our text reader could not find a planned line, most often the headline. In the other 21, the model drew each planned line and then wrote more: a stray word, or a line we did not ask for. On staging, it drew the shop's name a second time. In earlier versions, its Gujarati digits came out in shapes our text reader could not read back.
+
+The pictures go wrong too. The model redraws the product pack instead of copying it, and on one poster the cobra on a pesticide pack became a field scene. In a test of 10 posters, the model put the shop's logo on a pack it had invented on one of them. The small print on a drawn pack can change, and no text reader checks it.
+
+The pack photos fail from the other side. A bottle curves, a label mixes English, Hindi and Gujarati, and the text reader misreads a letter. In our first test on 86 real packs, the system returned `Emgectin Benzoate` for `Emamectin Benzoate`, an active ingredient that does not exist.
+
+These mistakes cost more than they look. A wrong price goes out to the shop's customers under the owner's name. A wrong phone number loses the sale. A wrong strength on a pesticide record names a different product. The errors look plausible, so the owner and the farmer will both miss them at a glance.
+
+The model will improve. Shops need posters now, so we built a harness that lets today's model do the drawing and the reading, and lets code decide what ships.
+
+## The solution: the model proposes, code checks
+
+We built both jobs around one rule. A model may propose a poster or a reading of a label. Plain code then compares that proposal with something the model did not write: the words we planned, the pack photo, the printed label. If the two disagree, the model gets another try, or we flag the result, or we leave the field blank. An eval on real packs and posters keeps score.
+
+![A model proposes, code compares it with the source, and the result ships, goes back for a fix, or gets flagged](diagrams/harness-loop.png)
+
+*The loop behind both jobs.*
+
+### Decide the words before the model draws
+
+The image model does not choose what the poster says. Code writes a text plan first, one Gujarati line per field, and the model only draws it. We fixed two whole classes of failure at this stage. Each number goes in Western digits, which our text reader can read. A unit after a number, such as `300 g`, becomes `300 ગ્રામ`, so a stray Latin letter can't slip in.
+
+The plan also protects the owner's own words. A voice note becomes benefit lines on the poster, and we keep a line only if it deletes words from what the owner said and adds none. A model that polishes the pitch into marketing copy can invent a claim about a regulated product that the owner did not make.
+
+### Read every line back
+
+After each drawing, Google Cloud Vision reads the poster, and code compares each planned line with what Vision read, character for character. A wrong line goes back to the model in the same chat, with the field named and the text it must carry. The model gets three tries in 90 seconds.
+
+Our first version let a line pass with up to 15% of its letters wrong, and it found a number anywhere inside a longer one. That check found `593` inside `2593`, and a poster passed with the wrong price on it. We removed both allowances. A number now has to match on its own, digit for digit.
+
+<LineCheck />
+
+If the three tries run out, a second model reads the poster. It gets no copy of the plan, because a reader that knows the expected words tends to find them. If it reads each failed line the same way the plan does, the poster passes.
+
+![The poster loop: code writes the plan, the model draws, a reader checks each line, and the poster ships, goes back for a fix, or stops](diagrams/poster-turn-loop.png)
+
+*One poster, from plan to phone.*
+
+### Ship what you can, and say what's wrong
+
+A poster can leave in three states. A verified poster passed every check. A flagged poster ships with the names of its faulty lines attached. We refuse a poster only when every try put a wrong number on it, because a wrong price or phone number must not reach a farmer.
+
+In the October gallery, 1 of 20 product posters passed on the first try. After repair turns and the second reader, 14 of 20 ended verified. The other 6 ended flagged, with their faults named. None needed a refusal.
+
+<GalleryOutcome />
+
+The checks also stopped us from building the wrong fix. In September some posters failed for text overflow, and we planned to ask owners to shorten their lines. We read two days of logs first. Of 5 failures, none came from a line the owner typed: in each one the model had added words. Shorter text from the owner would have fixed nothing, so we dropped the feature.
+
+### Get the product right before the poster
+
+A poster can only be as right as the product record behind it. The pack reader tries the cheap, exact methods first: a pattern for lines such as `Thiamethoxam 30% FS`, our list of registered active ingredients, and the registration number printed on each pesticide. It calls a model only when those find nothing.
+
+The model's answer has to quote a line from the photo. Code checks that the line exists, that each strength appears on it, and that each active ingredient sits on the registered list. If a check fails, the field stays blank and the owner types it in. A wrong active ingredient can end up in a farmer's spray tank, so we take the blank.
+
+![Pack reading: fast readers first, then a model whose answer code checks against the photo](diagrams/pack-reading.png)
+
+*The model reads the label only after the exact methods find nothing.*
+
+Two cases show how this plays out:
+
+- **Intrepid.** The front of the bottle prints `Chlorfenapyr 10% SC`, but the C sits on the curve and the reader sees `SO`. The back prints the registration number, which names the formulation: `Chlorfenapyr (SC)`. Code now takes the formulation from there, and only when the misread differs by one letter.
+- **KING.** A model asked for the brand in Gujarati can return `રાજા`, the Gujarati word for king. Farmers ask for the product by its brand, so the poster needs `કિંગ`. Code compares the sounds of the two names and refuses a translation.
+
+The product photo needed the same care. Ask an image model to clean up a pack photo and it can rewrite the label, concentrations included. We ship a generated product photo only when its label adds no number and at most two stray words. Otherwise KOSHI ships the owner's own photo, turned, cropped and colour-corrected with edits that code can replay byte for byte.
+
+### Keep score on real inputs
+
+We test each of these fixes on real inputs. The pack eval runs on 86 real packs and scores each field as right, left blank, or wrong. Its gate counts the wrong answers, since a blank costs the owner some typing. The pattern reader used to accept any word in front of a strength as an active ingredient, which is how `Emgectin` got through. After we made it check the registered list, wrong identities on the test set dropped from 14 to 10.
+
+For the look of a poster, we built a judge: a second model compares two versions of each poster on points such as a clear focal point and a readable footer at chat size. It asks about each pair twice, with the sides swapped, and a person checks it on a blind test before its votes count. Until the judge passes that test, a person makes the call.
+
+## What's next: the model isn't good enough yet
+
+The harness catches the model's Gujarati mistakes. It does nothing to make the model write better Gujarati. The October gallery needed 52 drawings for 25 posters, about $7, and a median of about a minute per poster. Each repair adds another drawing.
+
+So we tested a split. The model draws only the art, and code sets the Gujarati text with a real font. In a 100-poster test, the model kept its art free of lettering on 96. Asked to draw empty panels for the text, it drew them and left them empty on 88. A browser's font engine shaped every conjunct we tried. Text placed on open areas of the art worked on only 48 of 100, and text set into the panels did better. We haven't decided yet.
+
+<SplitTest />
+
+For now, every poster KOSHI sends goes through the checks above, and a few gaps remain:
+
+- The text reader checks the poster's lines and skips the small print on the drawn pack.
+- Nothing yet compares the logo on the poster with the one the owner uploaded.
+- A person still has to verify the truth for each of the 86 test packs.

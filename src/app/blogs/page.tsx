@@ -9,7 +9,9 @@ export const metadata: Metadata = {
 };
 
 export default function BlogsPage() {
-  const posts = getAllBlogPosts();
+  const all = getAllBlogPosts();
+  const featured = all.filter((post) => post.featured);
+  const posts = all.filter((post) => !post.featured);
 
   return (
     <Shell current="writing">
@@ -20,9 +22,38 @@ export default function BlogsPage() {
         Thought experiments and things I&apos;ve learned.
       </p>
 
-      {posts.length === 0 ? (
+      {featured.map((post) => (
+        <Link
+          key={post.slug}
+          href={`/blog/${post.slug}`}
+          className="group mb-6 block border-2 border-border bg-now"
+        >
+          <span className="flex flex-wrap items-center gap-x-4 border-b-2 border-border text-sm font-semibold">
+            <span className="bg-foreground px-3 py-1.5 font-bold text-background">Featured</span>
+            <time dateTime={post.date} className="tabular-nums">
+              {new Date(post.date).toLocaleDateString("en-GB", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })}
+            </time>
+            {post.readTime && <span>{post.readTime}</span>}
+          </span>
+          <span className="block px-3 pt-4 pb-4 sm:px-4">
+            <span className="type-display block text-[clamp(2rem,4.6vw,3.5rem)] group-hover:underline">
+              {post.title}
+            </span>
+            {post.description && (
+              <span className="mt-3 block max-w-[52rem] text-lg font-medium">{post.description}</span>
+            )}
+            <span className="mt-3 block font-bold">Read the post →</span>
+          </span>
+        </Link>
+      ))}
+
+      {all.length === 0 ? (
         <p className="border-2 border-border p-4">No posts yet. Check back soon.</p>
-      ) : (
+      ) : posts.length === 0 ? null : (
         <ul className="border-2 border-border">
           {posts.map((post) => (
             <li key={post.slug} className="border-b border-border last:border-b-0">
