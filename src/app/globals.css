@@ -19,8 +19,8 @@
   --color-border: var(--border);
   --color-now: var(--now);
 
-  --font-sans: var(--font-archivo);
-  --font-mono: var(--font-fira-code);
+  --font-sans: var(--font-archivo), var(--font-gujarati);
+  --font-mono: var(--font-fira-code), var(--font-gujarati);
 }
 
 /* The condensed, heavy, upper-case cut used for the name, page titles and post headings. */
@@ -40,12 +40,12 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-archivo), sans-serif;
+  font-family: var(--font-archivo), sans-serif, var(--font-gujarati);
   line-height: 1.5;
 }
 
 code, pre, kbd {
-  font-family: var(--font-fira-code), monospace;
+  font-family: var(--font-fira-code), monospace, var(--font-gujarati);
 }
 
 @keyframes fadeIn {
@@ -192,7 +192,7 @@ textarea:focus-visible {
 
 .mdx-content pre,
 .mdx-content code {
-  font-family: var(--font-fira-code), monospace;
+  font-family: var(--font-fira-code), monospace, var(--font-gujarati);
   font-size: 0.875rem;
 }
 
@@ -200,4 +200,27 @@ textarea:focus-visible {
   background: transparent !important;
   padding: 0 !important;
   border: none !important;
+}
+
+/* Markdown images: the italic line after one is its caption. */
+.mdx-content p:has(> .mdx-figure) {
+  margin-bottom: 0.5rem;
+}
+
+.mdx-content p:has(> .mdx-figure) + p:has(> em:only-child) {
+  font-size: 0.95rem;
+  color: var(--muted);
+  margin-bottom: 2rem;
+}
+
+/* Interactive figures bring their own spacing. */
+.mdx-content .mdx-demo ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.mdx-content .mdx-demo li,
+.mdx-content .mdx-demo p {
+  margin: 0;
 }
