@@ -48,6 +48,15 @@ const ITEMS: IndexItem[] = [
   },
   {
     kind: "project",
+    title: "Citadel",
+    description:
+      "A company brain on FalkorDB: Claude agents answer from the graph and cite their sources, and a Keeper agent repairs what it misses.",
+    year: 2026,
+    href: "/projects/citadel",
+    linkLabel: "Case study",
+  },
+  {
+    kind: "project",
     title: "coin-launch",
     description: "Token launch platform on Solana.",
     year: 2026,
