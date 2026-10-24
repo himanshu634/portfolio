@@ -10,6 +10,8 @@ export interface BlogPost {
   date: string;
   readTime?: string;
   tags?: string[];
+  /** Pinned to the top of the writing list and the home index. */
+  featured?: boolean;
 }
 
 const contentDirectory = path.join(process.cwd(), "content", "blogs");
@@ -36,11 +38,15 @@ export function getAllBlogPosts(): BlogPost[] {
         date: data.date || "",
         readTime: data.readTime,
         tags: data.tags || [],
+        featured: data.featured === true,
       } as BlogPost;
     });
 
-  // Sort posts by date (most recent first)
+  // Featured first, then by date (most recent first)
   return allPostsData.sort((a, b) => {
+    if (a.featured !== b.featured) {
+      return a.featured ? -1 : 1;
+    }
     if (a.date < b.date) {
       return 1;
     } else {

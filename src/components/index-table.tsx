@@ -96,7 +96,7 @@ export function IndexTable({ items }: { items: IndexItem[] }) {
 function IndexRow({ item }: { item: IndexItem }) {
   const external = item.href.startsWith("http");
   const when = item.now ? "Now" : String(item.year);
-  const nowCell = item.now ? "bg-now font-bold" : "";
+  const nowCell = item.now || item.featured ? "bg-now font-bold" : "";
 
   const cells = (
     <>
@@ -113,7 +113,14 @@ function IndexRow({ item }: { item: IndexItem }) {
           </span>
           <span>{item.linkLabel}</span>
         </span>
-        <span className="text-[19px] leading-snug font-bold md:mr-3 md:text-lg">{item.title}</span>
+        <span className="text-[19px] leading-snug font-bold md:mr-3 md:text-lg">
+          {item.featured && (
+            <span className="mr-2 inline-block bg-foreground px-1.5 align-[0.1em] text-sm text-background">
+              Featured
+            </span>
+          )}
+          {item.title}
+        </span>
         {item.description && <span className="text-muted">{item.description}</span>}
       </span>
       <span className="hidden items-center px-3.5 md:flex">

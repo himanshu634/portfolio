@@ -1,6 +1,8 @@
 import { getAllBlogPosts, getBlogPostBySlug, getPostSections } from "@/lib/blogs";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
+import { ComponentPropsWithoutRef } from "react";
+import { ZoomImage } from "@/components/mdx/zoom-image";
 
 interface BlogPostPageProps {
   params: Promise<{ slug: string }>;
@@ -71,6 +73,14 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     keywords: post.metadata.tags?.join(", "),
   };
 
+  // Markdown images use paths relative to the post; its files live in public/blog/<slug>/.
+  const img = ({ src, ...props }: ComponentPropsWithoutRef<"img">) => (
+    <ZoomImage
+      {...props}
+      src={typeof src === "string" && !/^(\/|https?:)/.test(src) ? `/blog/${slug}/${src}` : src}
+    />
+  );
+
   const sections = getPostSections(post.content);
   const tags = post.metadata.tags ?? [];
 
@@ -122,7 +132,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           </nav>
         )}
         <div className="mdx-content min-w-0 max-w-[680px] flex-1">
-          <MDXContent />
+          <MDXContent components={{ img }} />
         </div>
       </div>
     </article>
