@@ -16,11 +16,12 @@ export interface IndexItem {
   linkLabel: string;
 }
 
-export const KINDS: { kind: Kind; label: string; filter: string; hash: string }[] = [
-  { kind: "work", label: "Role", filter: "Work", hash: "work" },
-  { kind: "project", label: "Project", filter: "Projects", hash: "projects" },
-  { kind: "writing", label: "Writing", filter: "Writing", hash: "writing" },
-  { kind: "oss", label: "Open source", filter: "Open source", hash: "open-source" },
+/** The home page's sections, in the header's order. `label` names one item, `section` the group. */
+export const KINDS: { kind: Kind; label: string; section: string; hash: string }[] = [
+  { kind: "work", label: "Role", section: "Work", hash: "work" },
+  { kind: "project", label: "Project", section: "Projects", hash: "projects" },
+  { kind: "writing", label: "Writing", section: "Writing", hash: "writing" },
+  { kind: "oss", label: "Open source", section: "Open source", hash: "open-source" },
 ];
 
 // Everything except blog posts, which come from content/blogs. Sources: the
