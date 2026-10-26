@@ -1,0 +1,155 @@
+---
+title: "Rereading feels like learning. Research says it isn't."
+description: "I went through about 30 research papers on reading. Rereading is one of the weakest ways to learn from text; these ten rules work better."
+date: "2026-10-26"
+readTime: "10 min read"
+tags: ["reading", "learning", "research", "memory"]
+---
+
+I used to reread chapters to make them stick. It felt productive: the second pass was smoother, the ideas looked familiar, and I came away confident.
+
+Then I went through about 30 research papers on reading, from eye-tracking labs, memory science and studies of how scientists read papers. The clearest finding was that rereading is one of the weakest ways to learn from text.
+
+In a 2006 study, Henry Roediger and Jeffrey Karpicke had students learn short prose passages. One group mostly reread the passage. Another read it once, then repeatedly wrote down everything they could remember without looking.
+
+Five minutes later, the rereaders did better. A week later, the result flipped: the recall group remembered 61% of the passage and the rereaders 40%. The rereaders had read the text about four times as often, and they predicted they would remember more.
+
+That study sums up this whole post. Understanding happens while you read, but memory is built after you close the book. Most of us put all our effort into the first half.
+
+## Why you can't just read faster
+
+Reading speed is limited by how fast you recognize words and make sense of language, not by how you move your eyes. A meta-analysis of 190 studies put average adult silent reading at 238 words per minute for non-fiction and 260 for fiction (Brysbaert, 2019). The often-quoted 300 is too high for most people.
+
+A 2016 review led by Keith Rayner, one of the field's leading eye-movement researchers, examined speed-reading claims. It concluded that speed trades off against comprehension. Doubling or tripling your speed without losing understanding is unlikely, because language skill is the bottleneck.
+
+Speed-reading apps that flash one word at a time make this worse. Readers normally glance back at earlier words about 10–15% of the time. When researchers blocked those look-backs, comprehension dropped, even for simple sentences (Schotter, Tran & Rayner, 2014).
+
+What does make you faster is knowing more. For a fluent adult, recognizing words is a solved problem; comprehension now depends mostly on vocabulary and background knowledge of the topic (Castles, Rastle & Nation, 2018). That's why a familiar subject reads quickly and an unfamiliar one crawls.
+
+## The ten rules
+
+These are ordered by how much they're likely to improve what you understand and remember. The first two do most of the work, and both happen after you stop reading.
+
+### 1. Close the book and recall
+
+After each section, look away and write down the main ideas from memory: the claims, how they connect, and one example. Then reopen the text, check, and fix what you missed.
+
+Pulling information out of memory strengthens it far more than reading it again. It also shows you exactly what you don't know, which rereading hides behind a feeling of familiarity. A major review of study techniques rated self-testing as one of only two highly effective methods (Dunlosky et al., 2013).
+
+**Example:** You finish a section on database replication. Close the book and write: the leader takes writes and followers copy its log; synchronous replication is safer but slower; promoting a lagging follower can lose writes. Reopen it and you'll see you forgot replication lag and the anomalies it causes. That gap becomes tomorrow's review question.
+
+### 2. Space out your returns
+
+Come back to important material a day later, then a few days later, then a few weeks later. Each time, test yourself before you look at the text or your notes.
+
+Spacing feels worse in the moment, because you've forgotten some of it. That effort to reconstruct the material is what makes it last. Spaced practice is the other technique rated highly effective by Dunlosky et al. (2013).
+
+**Example:** After reading the Raft consensus paper, write eight questions, such as "Why must a candidate's log be at least as up to date as the voter's?" Answer them from memory on days 1, 3, 10 and 30, about five minutes each. If you can't explain one rule on day 10, reread just that subsection.
+
+### 3. Read with a goal, in passes
+
+Before you start, write one sentence: "I'm reading this to…". Do a quick first pass over the title, introduction, headings, figures and conclusion, then decide: stop, read for the gist, or read closely.
+
+For research papers, S. Keshav's three-pass method is the standard: a 5–10 minute first pass, a second pass of up to an hour, and a third in which you mentally re-implement the work. Professionals triage too. University faculty read about 21 articles a month, spending about 32 minutes on each (Tenopir et al., 2015).
+
+Skimming gets you the main ideas but not the details (Duggan & Payne, 2009). Use it to decide what deserves a careful read, not as a substitute for one.
+
+**Example:** A colleague sends a paper claiming a new storage technique doubles write throughput. Your goal: decide whether it's worth prototyping. Eight minutes in, you see it uses only synthetic benchmarks and doesn't compare against your current setup. Read the evaluation closely, skip the proofs, and you're done in 35 minutes instead of three hours.
+
+### 4. Fix the knowledge gap first
+
+When a text keeps losing you, stop. The problem is usually a missing prerequisite, not your attention. Read a primer, a survey or a textbook chapter, and keep a glossary of key terms in your own words.
+
+This follows directly from how reading works: for a fluent adult, comprehension depends mainly on vocabulary and background knowledge. Keshav's advice for a new field is the same: find a good survey paper before the frontier papers.
+
+**Example:** You start a paper on CRDTs and stall on "join-semilattice". Spend 25 minutes with a tutorial and write a ten-line glossary. The paper's core section now reads in half the time.
+
+### 5. Explain it to yourself as you go
+
+At each step that isn't obvious, ask "Why is this true?" and "How does this connect to what I already know?" Answer in the margin, in a notes file, or out loud.
+
+A meta-analysis of 69 comparisons with nearly 6,000 participants found that prompting people to explain material to themselves produced a clear improvement in learning, and a larger one when learning from text (Bisra et al., 2018). It takes time, so save it for material you need to understand.
+
+**Example:** In the Transformer paper, write next to the attention formula: "Why divide by √d\_k? Because large dot products push softmax into regions with tiny gradients." Then try to explain why each attention head gets its own projection. If you can't, that's exactly where to reread.
+
+### 6. Test your understanding the next day
+
+Right after reading, everything feels clear, because the words are still fresh. That feeling is a poor guide. Students judged their own understanding far more accurately after writing a summary later than right after reading (Thiede & Anderson, 2003).
+
+So wait at least a few hours, ideally until the next day. Summarize from memory, then try a question the text didn't answer directly. Wherever you get stuck is what to restudy.
+
+**Example:** You read an outage post-mortem and feel you've got it. The next morning, you write the chain of failures from memory, then ask: "What single change would have stopped this earliest?" You can't decide, because you skimmed past the paragraph on the circuit breaker. Go back to just that part.
+
+### 7. Skip speed reading; skim on purpose
+
+For anything you need to understand, read at your natural pace, and slower for code, maths and dense methods. When you need speed, skim deliberately: headings, topic sentences and figures. Know that you're getting the gist, and mark what to come back to.
+
+**Example:** Faced with a 40-page protocol spec, spend ten minutes skimming the table of contents and two likely sections to find the part relevant to your bug. Then read those four pages slowly, glancing back as often as you need.
+
+### 8. Reread surgically
+
+Glancing back mid-sentence when something doesn't parse is healthy. Rereading whole chapters out of habit mostly isn't: across four experiments with real textbook material, rereading rarely improved test scores (Callender & McDaniel, 2009).
+
+Reread only the gaps your recall exposed, with a specific question in mind, and preferably a day or more later.
+
+**Example:** While recalling a chapter on database isolation levels, you realize you can't tell write skew from a lost update. Instead of rereading 30 pages, reread the three-page example, then explain the difference out loud.
+
+### 9. Read the evidence, not the story
+
+In research papers and technical write-ups, the abstract and conclusion are the authors' interpretation. The figures, methods and evaluation are the evidence. In a survey of 260 biologists, undergraduates valued the abstract most, while experienced researchers valued the figures, results and methods (Hubbard & Dunbar, 2017).
+
+The key question is whether the study's design could actually answer the question it asks.
+
+**Example:** A machine learning paper claims a 40% drop in hallucinations. The results table shows one benchmark, judged by a model from the same family, against a weak baseline, with three runs. Your note: "Promising, not established." Twenty minutes, and you know how much to trust it.
+
+### 10. Give dense text the right conditions
+
+For dense technical material, paper or a distraction-free, paginated screen works slightly better than a scrolling browser tab, especially under time pressure. Two meta-analyses found a small paper advantage for informational text, none for stories, and that screen readers overestimated their understanding (Delgado et al., 2018; Clinton, 2019).
+
+The effect is small, so don't overthink it. But don't squeeze important reading in between meetings.
+
+**Example:** For a long design spec you need to review, print it or open it full-screen with notifications off. Write questions in the margins and block 90 minutes.
+
+## Myths that don't hold up
+
+Most popular reading advice targets the eyes or the feeling of progress. The research points elsewhere.
+
+| Myth | What the research says |
+| --- | --- |
+| The average adult reads 300 words a minute, and you can train to 1,000+. | The average is about 238 for non-fiction. Doubling it without losing comprehension is unlikely (Brysbaert, 2019; Rayner et al., 2016). |
+| Speed-reading apps work by removing eye movements. | They remove look-backs, which comprehension depends on (Schotter, Tran & Rayner, 2014). |
+| Stop hearing words in your head to read faster. | Inner speech is part of normal skilled reading; suppressing it hurts comprehension of complex text (Rayner et al., 2016). |
+| Rereading and highlighting are how you learn. | Both are rated low utility. Self-testing beat rereading 61% to 40% after a week (Dunlosky et al., 2013; Roediger & Karpicke, 2006). |
+| If it felt clear, I understood it. | Judgments made right after reading are unreliable; a delayed summary is a far better check (Thiede & Anderson, 2003). |
+| Screens ruin reading. | There's a small paper advantage for dense text, mainly under time pressure, and none for fiction (Delgado et al., 2018; Clinton, 2019). |
+| Skimming is just bad reading. | Skimming keeps the main ideas and loses details, which makes it good for deciding what to read (Duggan & Payne, 2009). |
+
+## The checklist
+
+Here are the ten rules again, grouped by when you use them.
+
+| When | What to do |
+| --- | --- |
+| Before reading | Write a one-line goal. Skim first, then decide how deep to go. Fill knowledge gaps with a primer and a glossary. |
+| While reading | Explain each non-obvious step to yourself. Glance back freely. Read the figures, methods and evaluation, not just the abstract. Read at your natural pace, on paper or a distraction-free screen. |
+| After reading | Close the book and write down what you remember. Check your understanding the next day. Review with self-tests over days and weeks. Reread only the gaps you found. |
+
+If you change one habit, make it the first rule. The next time you finish a chapter, close the book and write down what you remember before moving on. It will feel harder than rereading, and that's the point.
+
+## Sources
+
+- Bisra et al. (2018), [Inducing self-explanation: a meta-analysis](https://gwern.net/doc/psychology/spaced-repetition/2018-bisra.pdf), *Educational Psychology Review*
+- Brysbaert (2019), [How many words do we read per minute? A review and meta-analysis of reading rate](https://reader.ku.edu/sites/reader/files/2024-01/How%20many%20words%20do%20we%20read%20per%20minute%20%281%29.pdf), *Journal of Memory and Language*
+- Callender & McDaniel (2009), [The limited benefits of rereading educational texts](https://profiles.wustl.edu/en/publications/the-limited-benefits-of-rereading-educational-texts/), *Contemporary Educational Psychology*
+- Castles, Rastle & Nation (2018), [Ending the Reading Wars: Reading Acquisition From Novice to Expert](https://doi.org/10.1177/1529100618772271), *Psychological Science in the Public Interest*
+- Clinton (2019), [Reading from paper compared to screens: A systematic review and meta-analysis](https://readingrockets.org/research-by-topic/reading-paper-compared-screens-systematic-review-and-meta-analysis), *Journal of Research in Reading*
+- Delgado, Vargas, Ackerman & Salmerón (2018), [Don't throw away your printed books](https://www.sciencedirect.com/science/article/pii/S1747938X18300101), *Educational Research Review*
+- Duggan & Payne (2009), [Text skimming: the process and effectiveness of foraging through text under time pressure](https://www.semanticscholar.org/paper/Text-skimming:-the-process-and-effectiveness-of-Duggan-Payne/f55500755cfbf2937ba86c1bfcc30b57ae002016), *Journal of Experimental Psychology: Applied*
+- Dunlosky, Rawson, Marsh, Nathan & Willingham (2013), [Improving Students' Learning With Effective Learning Techniques](https://doi.org/10.1177/1529100612453266), *Psychological Science in the Public Interest*
+- Hubbard & Dunbar (2017), [Perceptions of scientific research literature and strategies for reading papers depend on academic career stage](https://hull-repository.worktribe.com/output/919571/perceptions-of-scientific-research-literature-and-strategies-for-reading-papers-depend-on-academic-career-stage), *PLOS ONE*
+- Keshav (2007), [How to Read a Paper](https://6826.csail.mit.edu/2020/papers/howtoread.pdf), *ACM SIGCOMM Computer Communication Review*
+- Rayner, Schotter, Masson, Potter & Treiman (2016), [So Much to Read, So Little Time: How Do We Read, and Can Speed Reading Help?](https://doi.org/10.1177/1529100615623267), *Psychological Science in the Public Interest*
+- Roediger & Karpicke (2006), [Test-Enhanced Learning: Taking Memory Tests Improves Long-Term Retention](https://pubmed.ncbi.nlm.nih.gov/16507066/), *Psychological Science*
+- Schotter, Tran & Rayner (2014), [Don't Believe What You Read (Only Once)](https://journals.sagepub.com/doi/abs/10.1177/0956797614531148), *Psychological Science*
+- Tenopir, King, Christian & Volentine (2015), [Scholarly article seeking, reading, and use](https://trace.tennessee.edu/utk_infosciepubs/52), *Learned Publishing*
+- Thiede & Anderson (2003), [Summarizing can improve metacomprehension accuracy](https://experts.boisestate.edu/en/publications/summarizing-can-improve-metacomprehension-accuracy/), *Contemporary Educational Psychology*
