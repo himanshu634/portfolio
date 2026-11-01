@@ -12,6 +12,8 @@ export interface BlogPost {
   tags?: string[];
   /** Pinned to the top of the writing list and the home index. */
   featured?: boolean;
+  /** Off the main thread: listed under "Earlier" on the home index and /blogs. */
+  earlier?: boolean;
 }
 
 const contentDirectory = path.join(process.cwd(), "content", "blogs");
@@ -39,6 +41,7 @@ export function getAllBlogPosts(): BlogPost[] {
         readTime: data.readTime,
         tags: data.tags || [],
         featured: data.featured === true,
+        earlier: data.earlier === true,
       } as BlogPost;
     });
 

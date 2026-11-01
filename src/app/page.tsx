@@ -2,6 +2,7 @@ import Image from "next/image";
 import { Metadata } from "next";
 import { ContactLinks } from "@/components/footer";
 import { IndexTable } from "@/components/index-table";
+import { Principles } from "@/components/principles";
 import { Shell } from "@/components/shell";
 import { getAllBlogPosts } from "@/lib/blogs";
 import { getIndexItems } from "@/lib/index-items";
@@ -9,26 +10,29 @@ import { getIndexItems } from "@/lib/index-items";
 export const metadata: Metadata = {
   title: "Himanshu Mendapara",
   description:
-    "Tech lead at Bull Agritech in Ahmedabad. I build AI for money and markets.",
+    "Product engineer and tech lead at Bull Agritech, India. I build AI products end to end, from the agent to the app it ships in.",
   keywords: [
     "Himanshu Mendapara",
     "Portfolio",
     "Tech Lead",
-    "Full Stack Engineer",
+    "Product Engineering",
+    "Product Engineer",
     "AI Engineer",
-    "LLM Engineering",
     "AI Agents",
+    "LangGraph",
+    "LLM Engineering",
+    "Evals",
+    "Human-in-the-loop",
     "Knowledge Graphs",
-    "FalkorDB",
-    "Fintech",
     "Agritech",
+    "React Native",
     "Next.js",
-    "Rust",
   ],
   authors: [{ name: "Himanshu Mendapara" }],
   openGraph: {
     title: "Himanshu Mendapara",
-    description: "Tech lead at Bull Agritech. I build AI for money and markets.",
+    description:
+      "Product engineer and tech lead. I build AI products end to end, from the agent to the app it ships in.",
     type: "website",
   },
 };
@@ -54,10 +58,11 @@ export default function Home() {
           priority
         />
         <p className="min-w-[16rem] flex-1 text-xl leading-snug font-medium sm:text-[22px]">
-          Tech lead at Bull Agritech. I build AI for money and markets.
+          Product engineer and tech lead. I build AI products end to end, from the agent to the app it ships in.
         </p>
         <ContactLinks className="text-base" />
       </div>
+      <Principles />
       <IndexTable items={items} />
     </Shell>
   );

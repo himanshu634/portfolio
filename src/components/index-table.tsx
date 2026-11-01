@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import * as Accordion from "@radix-ui/react-accordion";
-import { KINDS, type IndexItem, type Kind } from "@/lib/index-items";
+import { EARLIER, KINDS, type IndexItem, type Kind } from "@/lib/index-items";
 
 const KIND_LABEL = Object.fromEntries(KINDS.map((k) => [k.kind, k.label])) as Record<Kind, string>;
 
@@ -13,8 +13,18 @@ const SECTION_COLUMNS = "md:grid md:grid-cols-[120px_minmax(0,1fr)_170px]";
 
 const DISPLAY = "font-black [font-stretch:62%] uppercase leading-none";
 
-function kindFromHash(hash: string): Kind | null {
-  return KINDS.find((k) => `#${k.hash}` === hash)?.kind ?? null;
+/** One folded section per kind, then Earlier; `value` is the accordion's and `hash` the URL's. */
+const SECTIONS = [
+  ...KINDS.map(({ kind, section, hash }) => ({ value: kind as string, section, hash })),
+  { value: "earlier", ...EARLIER },
+];
+
+function sectionFromHash(hash: string): string | null {
+  return SECTIONS.find((s) => `#${s.hash}` === hash)?.value ?? null;
+}
+
+function inSection(item: IndexItem, value: string): boolean {
+  return value === "earlier" ? !!item.earlier : !item.earlier && item.kind === value;
 }
 
 /** "Maester, Citadel, coin-launch and 3 more": what a closed section holds. */
@@ -25,7 +35,8 @@ function peek(items: IndexItem[]): string {
 
 /**
  * The home page: what is live now, always shown, then one folded section per
- * kind. Sections start closed and any number can be open at once.
+ * kind and an Earlier section last. Sections start closed and any number can
+ * be open at once.
  */
 export function IndexTable({ items }: { items: IndexItem[] }) {
   const [open, setOpen] = useState<string[]>([]);
@@ -34,9 +45,9 @@ export function IndexTable({ items }: { items: IndexItem[] }) {
   // "/#projects" (the header's Projects link) and friends open that section.
   useEffect(() => {
     const sync = () => {
-      const kind = kindFromHash(window.location.hash);
-      if (!kind) return;
-      setOpen((current) => (current.includes(kind) ? current : [...current, kind]));
+      const value = sectionFromHash(window.location.hash);
+      if (!value) return;
+      setOpen((current) => (current.includes(value) ? current : [...current, value]));
       setScrollTarget(window.location.hash.slice(1));
     };
     sync();
@@ -52,7 +63,7 @@ export function IndexTable({ items }: { items: IndexItem[] }) {
   }, [scrollTarget]);
 
   const now = items
-    .filter((item) => item.now || item.featured)
+    .filter((item) => (item.now || item.featured) && !item.earlier)
     .sort((a, b) => KINDS.findIndex((k) => k.kind === a.kind) - KINDS.findIndex((k) => k.kind === b.kind));
 
   return (
@@ -73,14 +84,14 @@ export function IndexTable({ items }: { items: IndexItem[] }) {
       )}
 
       <Accordion.Root type="multiple" value={open} onValueChange={setOpen} className="mt-5 border-2 border-border">
-        {KINDS.map(({ kind, section, hash }, i) => {
-          const sectionItems = items.filter((item) => item.kind === kind);
+        {SECTIONS.map(({ value, section, hash }, i) => {
+          const sectionItems = items.filter((item) => inSection(item, value));
           if (sectionItems.length === 0) return null;
-          const isOpen = open.includes(kind);
+          const isOpen = open.includes(value);
           return (
             <Accordion.Item
-              key={kind}
-              value={kind}
+              key={value}
+              value={value}
               id={hash}
               className={`scroll-mt-4 ${i > 0 ? "border-t-2 border-border" : ""}`}
             >
@@ -106,7 +117,7 @@ export function IndexTable({ items }: { items: IndexItem[] }) {
                 <ul>
                   {sectionItems.map((item) => (
                     <li key={item.href + item.title} className="border-t border-border">
-                      <Row item={item} first={item.now ? "Now" : String(item.year)} columns={SECTION_COLUMNS} lit={item.now || item.featured} />
+                      <Row item={item} first={item.now ? "Now" : String(item.year)} columns={SECTION_COLUMNS} lit={Boolean(item.now || item.featured)} />
                     </li>
                   ))}
                 </ul>
