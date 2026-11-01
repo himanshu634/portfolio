@@ -6,7 +6,7 @@ import { WorkEx } from "@/components/work-ex";
 export const metadata: Metadata = {
   title: "Work — Himanshu Mendapara",
   description:
-    "Roles and open-source work by Himanshu Mendapara: Bull Agritech, Genuin and WrenAI.",
+    "Himanshu Mendapara's work: tech lead at Bull Agritech on a procurement CRM, production AI agents and the Koshi app; earlier, the Genuin web app and SDK.",
 };
 
 export default function WorkPage() {

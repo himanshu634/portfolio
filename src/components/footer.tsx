@@ -38,7 +38,7 @@ export function Footer({ showContact = true }: { showContact?: boolean }) {
       className="mt-16 flex flex-wrap items-center justify-between gap-x-8 border-t-2 border-border py-6 text-[15px]"
     >
       <p className="font-semibold">
-        © {new Date().getFullYear()} Himanshu Mendapara, Ahmedabad
+        © {new Date().getFullYear()} Himanshu Mendapara, India
       </p>
       <div className="flex flex-wrap items-center gap-x-8">
         {showContact && <ContactLinks />}

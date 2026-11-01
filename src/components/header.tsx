@@ -14,7 +14,7 @@ export function Header({ current }: { current?: Section }) {
     <header className="border-b-2 border-border">
       <nav className="flex flex-wrap items-center justify-between gap-x-8 text-[15px] font-semibold sm:h-12">
         {current === "home" ? (
-          <span className="hidden sm:block">Ahmedabad, India</span>
+          <span className="hidden sm:block">India</span>
         ) : (
           <Link
             href="/"

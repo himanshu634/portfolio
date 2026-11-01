@@ -11,6 +11,8 @@ export interface IndexItem {
   now?: boolean;
   /** A featured post: pinned to the top with the year cell lit, like `now`. */
   featured?: boolean;
+  /** Off the AI and product work: kept, but listed in the Earlier section instead of its own. */
+  earlier?: boolean;
   href: string;
   /** Where the row goes: "GitHub", "Live site", "Work page"… */
   linkLabel: string;
@@ -24,28 +26,31 @@ export const KINDS: { kind: Kind; label: string; section: string; hash: string }
   { kind: "oss", label: "Open source", section: "Open source", hash: "open-source" },
 ];
 
+/** The last section: `earlier` items of every kind, below the AI and product work. */
+export const EARLIER = { section: "Earlier", hash: "earlier" };
+
 // Everything except blog posts, which come from content/blogs. Sources: the
 // work page and github.com/himanshu634 (repo creation years, PR and talk dates).
+// Within a year, rows keep this order, so the AI and product projects lead.
 const ITEMS: IndexItem[] = [
-  {
-    kind: "project",
-    title: "Maester",
-    description:
-      "Open-source portfolio manager that suggests your next move, with evidence. Pre-alpha.",
-    year: 2026,
-    now: true,
-    href: "https://github.com/himanshu634/maester",
-    linkLabel: "GitHub",
-  },
   {
     kind: "work",
     title: "Tech Lead, Bull Agritech",
-    description: "Farmer-to-processor supply chain, an agent-run CRM, and Koshi.",
-    // TODO: start year unknown; the row shows "Now" so it isn't displayed.
+    description: "A procurement CRM, production AI agents with a person approving every result, and Koshi.",
     year: 2026,
     now: true,
     href: "/work",
     linkLabel: "Work page",
+  },
+  {
+    kind: "project",
+    title: "Koshi",
+    description:
+      "An app for village agro retailers: farmers, offline billing and AI posters checked by OCR. Sole engineer.",
+    year: 2026,
+    now: true,
+    href: "/projects/koshi",
+    linkLabel: "Case study",
   },
   {
     kind: "project",
@@ -58,10 +63,11 @@ const ITEMS: IndexItem[] = [
   },
   {
     kind: "project",
-    title: "coin-launch",
-    description: "Token launch platform on Solana.",
+    title: "Maester",
+    description:
+      "Open-source portfolio manager that suggests your next move, with evidence. Pre-alpha.",
     year: 2026,
-    href: "https://github.com/himanshu634/coin-launch",
+    href: "https://github.com/himanshu634/maester",
     linkLabel: "GitHub",
   },
   {
@@ -74,7 +80,17 @@ const ITEMS: IndexItem[] = [
   },
   {
     kind: "project",
+    title: "coin-launch",
+    earlier: true,
+    description: "Token launch platform on Solana.",
+    year: 2026,
+    href: "https://github.com/himanshu634/coin-launch",
+    linkLabel: "GitHub",
+  },
+  {
+    kind: "project",
     title: "Banking CLI",
+    earlier: true,
     description: "A banking ledger in Rust, written to learn ownership and lifetimes.",
     year: 2025,
     href: "https://github.com/himanshu634/simple-banking-cli",
@@ -83,6 +99,7 @@ const ITEMS: IndexItem[] = [
   {
     kind: "project",
     title: "Konekt",
+    earlier: true,
     description: "Random video chat with two-player games built in.",
     year: 2025,
     href: "https://konekt-web.vercel.app",
@@ -106,8 +123,16 @@ const ITEMS: IndexItem[] = [
   },
   {
     kind: "work",
-    title: "Software Engineer, Genuin",
-    description: "Web app, web SDK and marketing site for a short-form video platform.",
+    title: "Software Engineer II, Genuin",
+    description: "Web SDK bundle from about 800 KB to about 40 KB, playback start from about 4 s to 1 s.",
+    year: 2026,
+    href: "/work",
+    linkLabel: "Work page",
+  },
+  {
+    kind: "work",
+    title: "Software Engineer I, Genuin",
+    description: "Web app, Web SDK foundation and shared component library for a short-form video platform.",
     year: 2023,
     href: "/work",
     linkLabel: "Work page",
@@ -115,8 +140,8 @@ const ITEMS: IndexItem[] = [
   {
     kind: "work",
     title: "Software Engineering Intern, Genuin",
-    description: "React and TypeScript fixes across the web app.",
-    year: 2023,
+    description: "Rewrote the web app in TypeScript and built its component library.",
+    year: 2022,
     href: "/work",
     linkLabel: "Work page",
   },
@@ -130,6 +155,7 @@ export function getIndexItems(posts: BlogPost[]): IndexItem[] {
     description: post.featured ? post.description : undefined,
     year: new Date(post.date).getFullYear(),
     featured: post.featured,
+    earlier: post.earlier,
     href: `/blog/${post.slug}`,
     linkLabel: post.readTime ? `Post, ${post.readTime.replace(" read", "")}` : "Post",
   }));
