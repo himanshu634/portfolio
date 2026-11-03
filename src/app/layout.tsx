@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Archivo, Fira_Code, Noto_Sans_Gujarati } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 const archivo = Archivo({
@@ -39,6 +40,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${archivo.variable} ${firaCode.variable} ${notoGujarati.variable} antialiased`}>
         {children}
+        <Analytics />
       </body>
     </html>
   );
