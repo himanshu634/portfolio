@@ -1,0 +1,13 @@
+{
+  "name": "rag-map",
+  "private": true,
+  "type": "module",
+  "description": "Offline step for the RAG post: embeds the site's posts and writes the data the clips draw.",
+  "scripts": {
+    "embed": "node embed.mjs"
+  },
+  "dependencies": {
+    "@huggingface/transformers": "3.8.1",
+    "umap-js": "1.4.0"
+  }
+}

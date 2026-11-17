@@ -1,0 +1,776 @@
+{
+  "model": "all-MiniLM-L6-v2",
+  "dims": 384,
+  "question": "How did an incorrect amount slip through?",
+  "layout": "UMAP, seed 7",
+  "questionXY": [
+    0.5631,
+    0.548
+  ],
+  "questionVector": [
+    -0.039,
+    0.054,
+    0.019,
+    0.06,
+    -0.043,
+    -0.105,
+    0.013,
+    0.052
+  ],
+  "counts": {
+    "harness": 29,
+    "rereading": 44,
+    "agritech": 22
+  },
+  "points": [
+    {
+      "post": "harness",
+      "n": 1,
+      "x": 0.8527,
+      "y": 0.6618
+    },
+    {
+      "post": "harness",
+      "n": 2,
+      "x": 0.9707,
+      "y": 0.5306
+    },
+    {
+      "post": "harness",
+      "n": 3,
+      "x": 0.8294,
+      "y": 0.5395
+    },
+    {
+      "post": "harness",
+      "n": 4,
+      "x": 0.9839,
+      "y": 0.4597
+    },
+    {
+      "post": "harness",
+      "n": 5,
+      "x": 1,
+      "y": 0.3856
+    },
+    {
+      "post": "harness",
+      "n": 6,
+      "x": 0.8764,
+      "y": 0.436
+    },
+    {
+      "post": "harness",
+      "n": 7,
+      "x": 0.7765,
+      "y": 0.4908
+    },
+    {
+      "post": "harness",
+      "n": 8,
+      "x": 0.8595,
+      "y": 0.4982
+    },
+    {
+      "post": "harness",
+      "n": 9,
+      "x": 0.6553,
+      "y": 0.617
+    },
+    {
+      "post": "harness",
+      "n": 10,
+      "x": 0.8041,
+      "y": 0.3135
+    },
+    {
+      "post": "harness",
+      "n": 11,
+      "x": 0.6786,
+      "y": 0.3872
+    },
+    {
+      "post": "harness",
+      "n": 12,
+      "x": 0.9219,
+      "y": 0.3511
+    },
+    {
+      "post": "harness",
+      "n": 13,
+      "x": 0.6171,
+      "y": 0.4244
+    },
+    {
+      "post": "harness",
+      "n": 14,
+      "x": 0.7452,
+      "y": 0.3107
+    },
+    {
+      "post": "harness",
+      "n": 15,
+      "x": 0.6367,
+      "y": 0.5411
+    },
+    {
+      "post": "harness",
+      "n": 16,
+      "x": 0.6074,
+      "y": 0.3447
+    },
+    {
+      "post": "harness",
+      "n": 17,
+      "x": 0.7471,
+      "y": 0.3885
+    },
+    {
+      "post": "harness",
+      "n": 18,
+      "x": 0.6908,
+      "y": 0.4501
+    },
+    {
+      "post": "harness",
+      "n": 19,
+      "x": 0.606,
+      "y": 0.471
+    },
+    {
+      "post": "harness",
+      "n": 20,
+      "x": 0.7446,
+      "y": 0.5535
+    },
+    {
+      "post": "harness",
+      "n": 21,
+      "x": 0.7575,
+      "y": 0.5997
+    },
+    {
+      "post": "harness",
+      "n": 22,
+      "x": 0.8779,
+      "y": 0.5819
+    },
+    {
+      "post": "harness",
+      "n": 23,
+      "x": 0.8926,
+      "y": 0.5411
+    },
+    {
+      "post": "harness",
+      "n": 24,
+      "x": 0.6872,
+      "y": 0.5118
+    },
+    {
+      "post": "harness",
+      "n": 25,
+      "x": 0.6708,
+      "y": 0.3354
+    },
+    {
+      "post": "harness",
+      "n": 26,
+      "x": 0.8672,
+      "y": 0.3957
+    },
+    {
+      "post": "harness",
+      "n": 27,
+      "x": 0.958,
+      "y": 0.4155
+    },
+    {
+      "post": "harness",
+      "n": 28,
+      "x": 0.805,
+      "y": 0.426
+    },
+    {
+      "post": "harness",
+      "n": 29,
+      "x": 0.7493,
+      "y": 0.4344
+    },
+    {
+      "post": "rereading",
+      "n": 1,
+      "x": 0.2463,
+      "y": 0.2906
+    },
+    {
+      "post": "rereading",
+      "n": 2,
+      "x": 0.1127,
+      "y": 0.0683
+    },
+    {
+      "post": "rereading",
+      "n": 3,
+      "x": 0.1949,
+      "y": 0.154
+    },
+    {
+      "post": "rereading",
+      "n": 4,
+      "x": 0.0703,
+      "y": 0.2604
+    },
+    {
+      "post": "rereading",
+      "n": 5,
+      "x": 0.1882,
+      "y": 0.2524
+    },
+    {
+      "post": "rereading",
+      "n": 6,
+      "x": 0.0097,
+      "y": 0.1138
+    },
+    {
+      "post": "rereading",
+      "n": 7,
+      "x": 0,
+      "y": 0.1522
+    },
+    {
+      "post": "rereading",
+      "n": 8,
+      "x": 0.0362,
+      "y": 0.2007
+    },
+    {
+      "post": "rereading",
+      "n": 9,
+      "x": 0.0636,
+      "y": 0.1125
+    },
+    {
+      "post": "rereading",
+      "n": 10,
+      "x": 0.2289,
+      "y": 0.2131
+    },
+    {
+      "post": "rereading",
+      "n": 11,
+      "x": 0.5129,
+      "y": 0.1104
+    },
+    {
+      "post": "rereading",
+      "n": 12,
+      "x": 0.1139,
+      "y": 0
+    },
+    {
+      "post": "rereading",
+      "n": 13,
+      "x": 0.4441,
+      "y": 0.0904
+    },
+    {
+      "post": "rereading",
+      "n": 14,
+      "x": 0.3479,
+      "y": 0.0142
+    },
+    {
+      "post": "rereading",
+      "n": 15,
+      "x": 0.1879,
+      "y": 0.0135
+    },
+    {
+      "post": "rereading",
+      "n": 16,
+      "x": 0.5082,
+      "y": 0.1965
+    },
+    {
+      "post": "rereading",
+      "n": 17,
+      "x": 0.2904,
+      "y": 0.1589
+    },
+    {
+      "post": "rereading",
+      "n": 18,
+      "x": 0.4206,
+      "y": 0.2464
+    },
+    {
+      "post": "rereading",
+      "n": 19,
+      "x": 0.2851,
+      "y": 0.211
+    },
+    {
+      "post": "rereading",
+      "n": 20,
+      "x": 0.4708,
+      "y": 0.2902
+    },
+    {
+      "post": "rereading",
+      "n": 21,
+      "x": 0.2885,
+      "y": 0.0088
+    },
+    {
+      "post": "rereading",
+      "n": 22,
+      "x": 0.1016,
+      "y": 0.1421
+    },
+    {
+      "post": "rereading",
+      "n": 23,
+      "x": 0.4108,
+      "y": 0.1518
+    },
+    {
+      "post": "rereading",
+      "n": 24,
+      "x": 0.3478,
+      "y": 0.2492
+    },
+    {
+      "post": "rereading",
+      "n": 25,
+      "x": 0.0513,
+      "y": 0.0448
+    },
+    {
+      "post": "rereading",
+      "n": 26,
+      "x": 0.1826,
+      "y": 0.3116
+    },
+    {
+      "post": "rereading",
+      "n": 27,
+      "x": 0.1229,
+      "y": 0.2394
+    },
+    {
+      "post": "rereading",
+      "n": 28,
+      "x": 0.4318,
+      "y": 0.0319
+    },
+    {
+      "post": "rereading",
+      "n": 29,
+      "x": 0.3721,
+      "y": 0.1857
+    },
+    {
+      "post": "rereading",
+      "n": 30,
+      "x": 0.3041,
+      "y": 0.0806
+    },
+    {
+      "post": "rereading",
+      "n": 31,
+      "x": 0.3889,
+      "y": 0.0901
+    },
+    {
+      "post": "rereading",
+      "n": 32,
+      "x": 0.1551,
+      "y": 0.1127
+    },
+    {
+      "post": "rereading",
+      "n": 33,
+      "x": 0.2443,
+      "y": 0.0488
+    },
+    {
+      "post": "rereading",
+      "n": 34,
+      "x": 0.3377,
+      "y": 0.1252
+    },
+    {
+      "post": "rereading",
+      "n": 35,
+      "x": 0.3462,
+      "y": 0.3561
+    },
+    {
+      "post": "rereading",
+      "n": 36,
+      "x": 0.3345,
+      "y": 0.3169
+    },
+    {
+      "post": "rereading",
+      "n": 37,
+      "x": 0.4328,
+      "y": 0.3523
+    },
+    {
+      "post": "rereading",
+      "n": 38,
+      "x": 0.2081,
+      "y": 0.1036
+    },
+    {
+      "post": "rereading",
+      "n": 39,
+      "x": 0.1542,
+      "y": 0.194
+    },
+    {
+      "post": "rereading",
+      "n": 40,
+      "x": 0.4362,
+      "y": 0.1945
+    },
+    {
+      "post": "rereading",
+      "n": 41,
+      "x": 0.1039,
+      "y": 0.1955
+    },
+    {
+      "post": "rereading",
+      "n": 42,
+      "x": 0.5844,
+      "y": 0.2446
+    },
+    {
+      "post": "rereading",
+      "n": 43,
+      "x": 0.2568,
+      "y": 0.1102
+    },
+    {
+      "post": "rereading",
+      "n": 44,
+      "x": 0.1491,
+      "y": 0.0447
+    },
+    {
+      "post": "agritech",
+      "n": 1,
+      "x": 0.7936,
+      "y": 0.9072
+    },
+    {
+      "post": "agritech",
+      "n": 2,
+      "x": 0.7251,
+      "y": 0.9525
+    },
+    {
+      "post": "agritech",
+      "n": 3,
+      "x": 0.7396,
+      "y": 0.7917
+    },
+    {
+      "post": "agritech",
+      "n": 4,
+      "x": 0.8754,
+      "y": 0.8662
+    },
+    {
+      "post": "agritech",
+      "n": 5,
+      "x": 0.7199,
+      "y": 1
+    },
+    {
+      "post": "agritech",
+      "n": 6,
+      "x": 0.7676,
+      "y": 0.8784
+    },
+    {
+      "post": "agritech",
+      "n": 7,
+      "x": 0.7785,
+      "y": 0.8072
+    },
+    {
+      "post": "agritech",
+      "n": 8,
+      "x": 0.707,
+      "y": 0.7343
+    },
+    {
+      "post": "agritech",
+      "n": 9,
+      "x": 0.8151,
+      "y": 0.9405
+    },
+    {
+      "post": "agritech",
+      "n": 10,
+      "x": 0.6226,
+      "y": 0.9535
+    },
+    {
+      "post": "agritech",
+      "n": 11,
+      "x": 0.84,
+      "y": 0.81
+    },
+    {
+      "post": "agritech",
+      "n": 12,
+      "x": 0.5851,
+      "y": 0.7327
+    },
+    {
+      "post": "agritech",
+      "n": 13,
+      "x": 0.8787,
+      "y": 0.9098
+    },
+    {
+      "post": "agritech",
+      "n": 14,
+      "x": 0.8357,
+      "y": 0.9819
+    },
+    {
+      "post": "agritech",
+      "n": 15,
+      "x": 0.7204,
+      "y": 0.8365
+    },
+    {
+      "post": "agritech",
+      "n": 16,
+      "x": 0.6374,
+      "y": 0.8726
+    },
+    {
+      "post": "agritech",
+      "n": 17,
+      "x": 0.6844,
+      "y": 0.8276
+    },
+    {
+      "post": "agritech",
+      "n": 18,
+      "x": 0.6151,
+      "y": 0.7854
+    },
+    {
+      "post": "agritech",
+      "n": 19,
+      "x": 0.7153,
+      "y": 0.8959
+    },
+    {
+      "post": "agritech",
+      "n": 20,
+      "x": 0.5796,
+      "y": 0.8951
+    },
+    {
+      "post": "agritech",
+      "n": 21,
+      "x": 0.6732,
+      "y": 0.9208
+    },
+    {
+      "post": "agritech",
+      "n": 22,
+      "x": 0.4682,
+      "y": 0.4446
+    }
+  ],
+  "top": [
+    {
+      "post": "harness",
+      "n": 15,
+      "score": 0.494,
+      "text": "Our first version let a line pass with up to 15% of its letters wrong, and it found a number anywhere inside a longer one. That check found 593 inside 2593, and a poster passed with the wrong price on it. We removed both allowances. A number now has to match on its own, digit for digit.",
+      "vector": [
+        -0.097,
+        0.019,
+        -0.022,
+        -0.047,
+        -0.041,
+        0.006,
+        0.025,
+        0.024
+      ]
+    },
+    {
+      "post": "harness",
+      "n": 9,
+      "score": 0.422,
+      "text": "These mistakes cost more than they look. A wrong price goes out to the shop's customers under the owner's name. A wrong phone number loses the sale. A wrong strength on a pesticide record names a different product. The errors look plausible, so the owner and the farmer will both miss them at a glance.",
+      "vector": [
+        -0.082,
+        0.084,
+        0.072,
+        -0.033,
+        0.021,
+        -0.045,
+        -0.004,
+        0.032
+      ]
+    },
+    {
+      "post": "harness",
+      "n": 24,
+      "score": 0.316,
+      "text": "We test each of these fixes on real inputs. The pack eval runs on 86 real packs and scores each field as right, left blank, or wrong. Its gate counts the wrong answers, since a blank costs the owner some typing. The pattern reader used to accept any word in front of a strength as an active ingredient, which is how Emgectin got through. After we made it check the registered list, wrong identities on the test set dropped from 14 to 10.",
+      "vector": [
+        -0.08,
+        -0.001,
+        -0.038,
+        0.006,
+        -0.001,
+        -0.026,
+        0.046,
+        0.001
+      ]
+    },
+    {
+      "post": "harness",
+      "n": 19,
+      "score": 0.274,
+      "text": "The checks also stopped us from building the wrong fix. In September some posters failed for text overflow, and we planned to ask owners to shorten their lines. We read two days of logs first. Of 5 failures, none came from a line the owner typed: in each one the model had added words. Shorter text from the owner would have fixed nothing, so we dropped the feature.",
+      "vector": [
+        -0.032,
+        0.053,
+        0.097,
+        0.025,
+        0.066,
+        -0.048,
+        -0.029,
+        -0.008
+      ]
+    },
+    {
+      "post": "rereading",
+      "n": 4,
+      "score": 0.269,
+      "text": "Five minutes later, the rereaders did better. A week later, the result flipped: the recall group remembered 61% of the passage and the rereaders 40%. The rereaders had read the text about four times as often, and they predicted they would remember more.",
+      "vector": [
+        0.04,
+        -0.043,
+        0.003,
+        0.06,
+        0.004,
+        0.071,
+        -0.021,
+        0.024
+      ]
+    },
+    {
+      "post": "rereading",
+      "n": 29,
+      "score": 0.235,
+      "text": "Example: You read an outage post-mortem and feel you've got it. The next morning, you write the chain of failures from memory, then ask: \"What single change would have stopped this earliest?\" You can't decide, because you skimmed past the paragraph on the circuit breaker. Go back to just that part.",
+      "vector": [
+        -0.003,
+        0.091,
+        0.078,
+        0.055,
+        0.035,
+        0.021,
+        -0.027,
+        0.073
+      ]
+    },
+    {
+      "post": "harness",
+      "n": 18,
+      "score": 0.227,
+      "text": "In the October gallery, 1 of 20 product posters passed on the first try. After repair turns and the second reader, 14 of 20 ended verified. The other 6 ended flagged, with their faults named. None needed a refusal.",
+      "vector": [
+        -0.027,
+        0.063,
+        -0.014,
+        -0.037,
+        0.101,
+        0.01,
+        0.048,
+        -0.029
+      ]
+    },
+    {
+      "post": "rereading",
+      "n": 34,
+      "score": 0.22,
+      "text": "Example: While recalling a chapter on database isolation levels, you realize you can't tell write skew from a lost update. Instead of rereading 30 pages, reread the three-page example, then explain the difference out loud.",
+      "vector": [
+        -0.011,
+        -0.076,
+        -0.036,
+        0.014,
+        0.043,
+        0.02,
+        -0.071,
+        -0.016
+      ]
+    }
+  ],
+  "sentenceTop": [
+    {
+      "para": 9,
+      "score": 0.419,
+      "text": "A wrong price goes out to the shop's customers under the owner's name."
+    },
+    {
+      "para": 15,
+      "score": 0.41,
+      "text": "Our first version let a line pass with up to 15% of its letters wrong, and it found a number anywhere inside a longer one."
+    },
+    {
+      "para": 9,
+      "score": 0.387,
+      "text": "These mistakes cost more than they look."
+    },
+    {
+      "para": 12,
+      "score": 0.354,
+      "text": "A unit after a number, such as 300 g, becomes 300 ગ્રામ, so a stray Latin letter can't slip in."
+    },
+    {
+      "para": 15,
+      "score": 0.336,
+      "text": "That check found 593 inside 2593, and a poster passed with the wrong price on it."
+    },
+    {
+      "para": 9,
+      "score": 0.3,
+      "text": "The errors look plausible, so the owner and the farmer will both miss them at a glance."
+    },
+    {
+      "para": 24,
+      "score": 0.3,
+      "text": "Its gate counts the wrong answers, since a blank costs the owner some typing."
+    },
+    {
+      "para": 15,
+      "score": 0.293,
+      "text": "We removed both allowances."
+    }
+  ],
+  "sentenceCount": 114,
+  "farthest": {
+    "post": "harness",
+    "n": 4,
+    "score": -0.086,
+    "text": "We draw the posters with Gemini 3 Pro Image. It composes a good scene, with rich colour, light behind the pack and a clear layout. The text lets it down. Google's documentation for the model lists the languages it handles best, and Gujarati is missing from that list. The same page suggests generating the text on its own."
+  }
+}
