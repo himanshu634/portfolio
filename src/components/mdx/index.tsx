@@ -5,6 +5,7 @@ import { MDXImage } from "./mdx-image";
 import { MDXLink } from "./mdx-link";
 import { ZoomImage } from "./zoom-image";
 import { GalleryOutcome, LineCheck, SplitTest } from "./harness-demos";
+import { RagClip } from "./rag/rag-clip";
 import { ComponentPropsWithoutRef } from "react";
 
 // Create a wrapper for pre that uses CodeBlock
@@ -22,4 +23,5 @@ export const mdxComponents = {
   LineCheck,
   GalleryOutcome,
   SplitTest,
+  RagClip,
 };

@@ -1,0 +1,157 @@
+---
+title: "How RAG looks things up before it answers"
+description: "A language model answers from memory. RAG makes it look things up first. Six short clips show each step, run on this site's own posts."
+date: "2026-11-17"
+readTime: "10 min read"
+tags: ["ai", "rag", "retrieval", "embeddings", "explainer"]
+---
+
+A language model answers from what it saw in training. Ask it about your own documents and it has two options: say it doesn't know, or guess. The guess reads just as well as a right answer.
+
+Retrieval-augmented generation, RAG for short, gives it a third option. Before the model answers, a search finds the passages that matter and puts them in front of it. The model then answers from those passages and says which one it used. The name comes from [a 2020 paper by Patrick Lewis and colleagues](https://arxiv.org/abs/2005.11401); it is now the usual way to make a model answer from documents it was never trained on.
+
+I wanted to see each step run, so I built a small one on this site's three earlier posts. Every number below comes from that run. One question goes all the way through:
+
+> How did an incorrect amount slip through?
+
+The answer is in [the post about Gujarati posters](/blog/gujarati-image-harness). An early version of a check found `593` inside `2593`, and a poster passed with the wrong price on it. I picked the wording on purpose: the question shares no word with the paragraph that answers it. A keyword search would never find it.
+
+Four words come up in every section:
+
+- **Chunk.** A piece of a document. Here, one paragraph.
+- **Embedding.** A list of numbers that stands for what a chunk means.
+- **Index.** The store that holds every chunk's numbers, ready to search.
+- **Prompt.** The text the model finally reads: a rule, the chunks, the question.
+
+Each section has a short clip. It starts when you scroll to it and loops. You can pause it, jump to a step, or read the steps as text.
+
+## The whole system, once
+
+RAG is two jobs that run at different times.
+
+The first job runs before anyone asks anything. It cuts the documents into chunks, turns each chunk into numbers, and stores the numbers in an index. For my three posts that meant 95 chunks.
+
+The second job runs for every question. It turns the question into numbers with the same model, finds the chunks whose numbers are closest, and hands those chunks to a language model together with the question.
+
+<RagClip name="overview" caption="The top lane runs once, ahead of time. The bottom lane runs for every question." />
+
+The rest of this post walks through the lanes one box at a time.
+
+## Cut the posts into chunks
+
+A whole post is too big a unit to search. If the search returns "the poster post", the model still has to find the two sentences that matter among two thousand words. So the documents are cut into chunks, and the search returns chunks.
+
+Where you cut decides what a chunk can answer. I cut the poster post two ways and asked the question of both.
+
+Cut by paragraph, the best match across all 95 chunks was the right one. It holds the cause, the example and the fix:
+
+> Our first version let a line pass with up to 15% of its letters wrong, and it found a number anywhere inside a longer one. That check found 593 inside 2593, and a poster passed with the wrong price on it. We removed both allowances. A number now has to match on its own, digit for digit.
+
+Cut by sentence, the same post becomes 114 chunks, and the best match was a sentence from a different paragraph: "A wrong price goes out to the shop's customers under the owner's name." It mentions a wrong price. It doesn't say how one got through. The sentence with the cause came second, and the sentence with the example, 593 inside 2593, came fifth. A search that keeps the top three never sees it.
+
+<RagClip name="chunking" caption="Ranks are for the running question: by paragraph, across all 95 chunks; by sentence, across the poster post's 114 sentences." />
+
+Cutting too large fails the other way. The answer is in the chunk, but so is a lot else. Chroma measured this in 2024: with chunks of 200 tokens, 7.0% of the retrieved text was relevant to the question; with overlapping chunks of 800 tokens, 1.5%. The share of the relevant text that was found barely moved, at 88.1% against 85.4%.
+
+Most systems split on paragraphs first, then on sentences, until each piece fits a size limit. Some repeat a little text across each cut, so a thought that straddles the cut survives in one piece.
+
+## Turn each chunk into numbers
+
+Search needs a way to tell that two pieces of text are about the same thing when they use different words. An embedding model provides it. It reads a chunk and returns a list of numbers, and it is trained so that texts with similar meaning get similar lists.
+
+I used a small open model, all-MiniLM-L6-v2, which returns 384 numbers per chunk. Larger models return 1,536 or 3,072. No single number means anything on its own. Only the comparison matters: two lists that point in the same direction belong to texts that mean similar things. The usual measure is cosine similarity, which is close to 1 for near-identical meaning and close to 0 for unrelated text.
+
+You can't draw 384 dimensions, so the clips flatten each list to a point on a map. Chunks from the same post end up together, because they are about the same subject.
+
+Before you watch: the question shares no word with the paragraph that answers it. Will it still land next to it?
+
+<RagClip name="embedding" caption="The map is a flat view of 384 numbers, made with UMAP. It keeps neighbours close. Distances across the map mean little." />
+
+It does. The question and that paragraph score 0.49. The least similar chunk of all 95 scores −0.09, and it comes from the same post: a paragraph about how well the image model composes a scene. The two paragraphs share a post and a vocabulary. They are about different things, and the numbers say so.
+
+## Find the closest chunks
+
+With every chunk on the map, search is a measurement. The question goes through the same embedding model, and the system keeps the chunks whose numbers are closest to the question's. How many to keep is a setting, usually called top-k. I kept three.
+
+<RagClip name="search" caption="Scores are cosine similarity, measured on all 384 numbers. On the flat map, the three picks are the question's 1st, 3rd and 4th nearest points." />
+
+Three things in that result are worth noticing.
+
+The scores fall off quickly: 0.49, 0.42, 0.32. The first chunk answers the question. The second is about what such mistakes cost. The third is about testing, and is there only because I asked for three. Top-k always returns k chunks, whether or not k good ones exist.
+
+All three come from the poster post. Nothing told the search which post to look in. The other two posts are about rereading and agritech, and their chunks sit elsewhere on the map.
+
+My 95 chunks can be compared one by one. A real system has millions, so it uses an index that finds the nearest neighbours without checking every chunk. The common one, HNSW, links each chunk to its neighbours in a layered graph and hops across it, first in long jumps, then in short ones.
+
+Meaning-based search has a blind spot: exact strings. Ask about `error E-4012` and it returns chunks about errors in general. Keyword search has the opposite one, as the running question shows. Many systems run both and merge the two lists.
+
+## Write the prompt
+
+The model never sees the index. It sees a prompt, and the prompt is plain text:
+
+```text
+Answer only from the sources below. Cite the source you used by its number.
+If the sources don't contain the answer, say so.
+
+[1] Our first version let a line pass with up to 15% of its letters wrong,
+    and it found a number anywhere inside a longer one. That check found
+    593 inside 2593, and a poster passed with the wrong price on it. ...
+[2] These mistakes cost more than they look. A wrong price goes out to the
+    shop's customers under the owner's name. ...
+[3] We test each of these fixes on real inputs. The pack eval runs on
+    86 real packs and scores each field as right, left blank, or wrong. ...
+
+Question: How did an incorrect amount slip through?
+```
+
+Each part has a job. The rule keeps the model from answering out of memory. The numbers let it point at a source. The last line of the rule gives it a way out when the search found nothing useful, which is better than a confident guess.
+
+<RagClip name="prompt" caption="The three chunks and their order are the real search result. I wrote the answer by hand to show its shape." />
+
+The citation is the part a reader can use. An answer that ends in `[1]` can be checked: open chunk 1 and see whether it says what the answer claims.
+
+## Where it breaks
+
+Most RAG failures are retrieval failures. The model writes a fluent answer either way, so you have to look at what it was handed.
+
+**The cut was wrong.** You saw this above: cut by sentence, the example fell out of the top three.
+
+**The search missed.** The right chunk exists and wasn't retrieved, because the question used different words, or because it needed an exact string. Running keyword search alongside helps.
+
+**The answer was retrieved and then lost.** More chunks feel safer. They aren't. In a 2023 study, a model answering from 20 documents got 75.8% of questions right when the document with the answer came first, and 53.8% when it came tenth. With no documents at all it got 56.1%. Burying the answer in the middle was worse than retrieving nothing.
+
+<RagClip name="breaks" caption="Accuracy figures: Liu et al. (2023), GPT-3.5-Turbo answering from 20 documents. The reranker row is a sketch, not a measurement." />
+
+A reranker is the usual fix. It is a second, slower model that reads the question and one chunk together and scores how well the chunk answers it. It runs only on the shortlist, and the best chunks go to the front of the prompt.
+
+**The index was stale.** The index is a snapshot. The 2020 paper tested this with questions about world leaders: with an index from the matching year the model was right about 70% of the time, and with an index from the wrong year, 4% to 12%. Changing a document means embedding it again.
+
+These fixes add up. Anthropic reported in 2024 that the share of relevant chunks its retrieval missed fell from 5.7% to 3.7% when each chunk carried a short note about the document it came from, to 2.9% with keyword search added, and to 1.9% with a reranker.
+
+RAG is also not always the answer. My three posts come to about 5,300 words. They fit in a single prompt many times over, and for a collection that small, putting everything in the prompt is simpler and at least as good. I used them here because you can check every chunk against the posts. RAG earns its keep when the documents are too many to fit, change often, or must be cited.
+
+## Check yourself
+
+Reading a page twice does little for memory. Answering questions about it does, as [the rereading post](/blog/rereading-feels-like-learning) explains. So, without scrolling up:
+
+1. The question shares no word with the paragraph that answers it. Why does the search find it anyway?
+2. Cut by sentence, which sentence ranked first, and what was wrong with it?
+3. A model gets 20 documents, and the answer is in the tenth. Is that better or worse than giving it none?
+
+If one of them stops you, the section titles say where to look.
+
+## How the numbers were made
+
+The search is a script in this site's repository. It cuts the three posts at paragraphs, embeds each chunk with all-MiniLM-L6-v2 on my laptop, ranks the chunks against the question by cosine similarity, and lays them out in two dimensions with UMAP. The clips draw what the script wrote. Nothing is computed when you open this page.
+
+Two things in the clips are not measured. The answer in the prompt clip is written by hand. The reranker in the last clip is a drawing of what a reranker does.
+
+## Sources
+
+- Lewis et al. (2020), [Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks](https://arxiv.org/abs/2005.11401), *NeurIPS*
+- Liu et al. (2023), [Lost in the Middle: How Language Models Use Long Contexts](https://arxiv.org/abs/2307.03172), arXiv
+- Smith & Troynikov (2024), [Evaluating Chunking Strategies for Retrieval](https://www.trychroma.com/research/evaluating-chunking), Chroma
+- Anthropic (2024), [Introducing Contextual Retrieval](https://www.anthropic.com/news/contextual-retrieval)
+- Malkov & Yashunin (2016), [Efficient and Robust Approximate Nearest Neighbor Search Using Hierarchical Navigable Small World Graphs](https://arxiv.org/abs/1603.09320)
+- McInnes, Healy & Melville (2018), [UMAP: Uniform Manifold Approximation and Projection for Dimension Reduction](https://arxiv.org/abs/1802.03426)
+- Sentence Transformers, [all-MiniLM-L6-v2](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2), the embedding model used here
