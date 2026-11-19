@@ -30,7 +30,7 @@ export function ContactLinks({ className = "" }: { className?: string }) {
   );
 }
 
-/** `showContact={false}` on the home page, whose lede row already lists the links. */
+/** `showContact={false}` on the home page, whose lede box already lists the links. */
 export function Footer({ showContact = true }: { showContact?: boolean }) {
   return (
     <footer
