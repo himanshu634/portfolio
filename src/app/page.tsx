@@ -8,7 +8,7 @@ import { getIndexItems } from "@/lib/index-items";
 export const metadata: Metadata = {
   title: "Himanshu Mendapara",
   description:
-    "Product engineer and tech lead at Bull Agritech, India. I build AI products end to end, from the agent to the app it ships in.",
+    "Product engineer at Bull Agritech, India, curious about AI and how to implement it well.",
   keywords: [
     "Himanshu Mendapara",
     "Portfolio",
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Himanshu Mendapara",
     description:
-      "Product engineer and tech lead. I build AI products end to end, from the agent to the app it ships in.",
+      "Product engineer, curious about AI and how to implement it well.",
     type: "website",
   },
 };
