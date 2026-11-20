@@ -28,7 +28,7 @@ const notoGujarati = Noto_Sans_Gujarati({
 export const metadata: Metadata = {
   title: "Himanshu Mendapara",
   description:
-    "Product engineer and tech lead at Bull Agritech, India. I build AI products end to end, from the agent to the app it ships in.",
+    "Product engineer at Bull Agritech, India, curious about AI and how to implement it well.",
 };
 
 export default function RootLayout({

@@ -22,7 +22,7 @@ export function Lede() {
         priority
       />
       <p className="px-3 pt-3 pb-3.5 text-[22px] leading-[1.2] font-bold tracking-[-0.01em] md:flex md:items-center md:border-r md:border-border md:py-3.5 md:pr-5 md:pl-3.5 md:text-[31px] md:leading-[1.16]">
-        Product engineer and tech lead. I build AI products end to end, from the agent to the app it ships in.
+        Product engineer, curious about AI and how to implement it well.
       </p>
       <ul className="grid grid-cols-4 border-t border-border text-[15px] font-semibold md:grid-cols-1 md:grid-rows-4 md:border-t-0 md:text-base">
         {CONTACT_LINKS.map(({ label, href }) => {
