@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Metadata } from "next";
+import { pageMetadata } from "@/lib/site";
 import { ReactNode } from "react";
 import { Part } from "@/components/part";
 import { PRINCIPLES } from "@/components/principles";
@@ -7,9 +8,12 @@ import { Shell } from "@/components/shell";
 import { Project } from "@/components/work-ex";
 
 export const metadata: Metadata = {
-  title: "Koshi — Himanshu Mendapara",
-  description:
-    "An app that helps village agro retailers manage their farmers and grow their business, with AI posters checked by OCR and approved by a person. Built end to end by Himanshu Mendapara.",
+  ...pageMetadata({
+    title: "Koshi — Himanshu Mendapara",
+    description:
+      "An app that helps village agro retailers manage their farmers and grow their business, with AI posters checked by OCR and approved by a person. Built end to end by Himanshu Mendapara.",
+    path: "/projects/koshi",
+  }),
   keywords: [
     "Koshi",
     "Product Engineering",

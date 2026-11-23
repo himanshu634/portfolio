@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import { ComponentPropsWithoutRef } from "react";
 import { ZoomImage } from "@/components/mdx/zoom-image";
+import { SITE_NAME, SITE_URL } from "@/lib/site";
 
 interface BlogPostPageProps {
   params: Promise<{ slug: string }>;
@@ -13,14 +14,13 @@ export async function generateStaticParams() {
   return posts.map((post) => ({ slug: post.slug }));
 }
 
-const BASE_URL = "https://himanshumendapara.com";
 
 export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
   const { slug } = await params;
   const post = getBlogPostBySlug(slug);
   if (!post) return { title: "Post Not Found" };
 
-  const url = `${BASE_URL}/blog/${slug}`;
+  const url = `${SITE_URL}/blog/${slug}`;
   const { title, description, date, tags } = post.metadata;
   const fullTitle = `${title} - Himanshu Mendapara`;
 
@@ -37,7 +37,7 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
       publishedTime: date,
       authors: ["Himanshu Mendapara"],
       tags,
-      siteName: "Himanshu Mendapara",
+      siteName: SITE_NAME,
     },
     twitter: {
       card: "summary_large_image",
@@ -67,9 +67,9 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     author: {
       "@type": "Person",
       name: "Himanshu Mendapara",
-      url: BASE_URL,
+      url: SITE_URL,
     },
-    url: `${BASE_URL}/blog/${slug}`,
+    url: `${SITE_URL}/blog/${slug}`,
     keywords: post.metadata.tags?.join(", "),
   };
 

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Archivo, Fira_Code, Noto_Sans_Gujarati } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
+import { SITE_NAME, SITE_URL } from "@/lib/site";
 
 const archivo = Archivo({
   variable: "--font-archivo",
@@ -26,9 +27,13 @@ const notoGujarati = Noto_Sans_Gujarati({
 });
 
 export const metadata: Metadata = {
-  title: "Himanshu Mendapara",
+  // Share images and canonical paths are written relative; this makes them absolute.
+  metadataBase: new URL(SITE_URL),
+  title: SITE_NAME,
   description:
     "Product engineer at Bull Agritech, India, curious about AI and how to implement it well.",
+  openGraph: { type: "website", siteName: SITE_NAME },
+  twitter: { card: "summary_large_image" },
 };
 
 export default function RootLayout({

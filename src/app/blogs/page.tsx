@@ -1,11 +1,16 @@
 import { getAllBlogPosts, type BlogPost } from "@/lib/blogs";
 import Link from "next/link";
 import { Metadata } from "next";
+import { pageMetadata } from "@/lib/site";
 import { Shell } from "@/components/shell";
 
 export const metadata: Metadata = {
-  title: "Writing — Himanshu Mendapara",
-  description: "Writing on agritech, software and what I'm learning.",
+  ...pageMetadata({
+    title: "Writing — Himanshu Mendapara",
+    description:
+      "Writing on agritech, software and what I'm learning.",
+    path: "/blogs",
+  }),
 };
 
 export default function BlogsPage() {
