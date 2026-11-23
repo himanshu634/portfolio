@@ -11,9 +11,7 @@ Everyone explains what RAG is, but here are the issues of RAG we should focus on
 
 The diagram is always the same: chunk the documents, embed them, store the vectors, retrieve the top-k, put them in the prompt, generate. It works in a demo. In production, the answer is wrong, and nothing in the diagram tells you why.
 
-I find it useful to sort the failures by where they happen. Some happen before the model sees anything (**retrieval-side**). Some happen while the model reads what you gave it (**reader-side**). And once RAG runs inside an agent that retrieves, reasons and retrieves again, a third kind shows up (**loop-side**). Three issues in each group, nine in total.
-
-Each issue has a diagram: what breaks above the line, the same flow with the fix below it.
+I find it useful to sort the failures by where they happen. Some happen before the model sees anything (**retrieval-side**). Some happen while the model reads what you gave it (**reader-side**). And once RAG runs inside an agent that retrieves, reasons and retrieves again, a third kind shows up (**loop-side**).
 
 ---
 
@@ -34,7 +32,7 @@ Each issue has a diagram: what breaks above the line, the same flow with the fix
 - Use hybrid search. Dense vectors miss exact terms: product codes, names, numbers, abbreviations. Lexical search misses paraphrases. Run both and fuse the ranked lists. Reciprocal rank fusion (RRF) is simple and hard to beat as a first step.
 - Fix the chunking. A table split in half, or a heading separated from its body, can't be retrieved as one answer.
 
-In Maester, my chatbot over company filings, retrieval fuses pgvector HNSW search with Postgres full-text search through RRF. Financial questions are full of exact terms ("EBITDA", a line-item name, a fiscal year) that pure embeddings blur.
+In [Maester](https://github.com/himanshu634/maester), my chatbot over company filings, retrieval fuses pgvector HNSW search with Postgres full-text search through RRF. Financial questions are full of exact terms ("EBITDA", a line-item name, a fiscal year) that pure embeddings blur.
 
 ### 2. Stale index
 
@@ -67,7 +65,7 @@ In Maester, my chatbot over company filings, retrieval fuses pgvector HNSW searc
 - Check every path that can return content: caches, conversation memory, query suggestions, and tool calls an agent can make.
 - Test it. Add eval cases where the correct answer is "you don't have access", and fail the build if the answer leaks.
 
-In Citadel, my Graph-RAG memory project, each company gets its own graph, so isolation is a property of where the data lives, not a filter someone has to remember.
+In [Citadel](/projects/citadel), my Graph-RAG memory project, each company gets its own graph, so isolation is a property of where the data lives, not a filter someone has to remember.
 
 ---
 
@@ -118,7 +116,7 @@ In Citadel, my Graph-RAG memory project, each company gets its own graph, so iso
 - Keep the date and source on every chunk and show them to the model.
 - Write a rule for conflicts: newest wins, the authoritative source wins, or show both. Make it explicit in the prompt or, better, in code.
 - When the conflict can't be settled, say so in the answer, with both citations.
-- Require citations. When every claim points at a source, a reviewer can check it. In Maester, every figure links to the PDF page it came from.
+- Require citations. When every claim points at a source, a reviewer can check it. In [Maester](https://github.com/himanshu634/maester), every figure links to the PDF page it came from.
 
 ---
 
@@ -139,7 +137,7 @@ Agentic RAG does not retrieve once. It plans, searches, reads, and searches agai
 **What to do.**
 - Check intermediate results, not only the final answer. Validate the entity, the number or the tool output before the next step uses it.
 - Keep deterministic work out of the model. Calculations, lookups and comparisons belong in code that the agent calls.
-- Check that claims are grounded. Citadel's grounding check rejects an answer that cites something the agent never retrieved.
+- Check that claims are grounded. [Citadel](/projects/citadel)'s grounding check rejects an answer that cites something the agent never retrieved.
 - Evaluate full traces, not single turns, so you see where a run went wrong.
 
 ### 8. No stopping rule
@@ -154,7 +152,7 @@ Agentic RAG does not retrieve once. It plans, searches, reads, and searches agai
 
 **What to do.**
 - Define sufficiency explicitly: which facts must be found before the agent answers.
-- Set hard budgets: maximum iterations, maximum tool calls, maximum model calls. Maester's extraction loop runs under a model-call budget.
+- Set hard budgets: maximum iterations, maximum tool calls, maximum model calls. [Maester](https://github.com/himanshu634/maester)'s extraction loop runs under a model-call budget.
 - Detect repeats. If a new search returns the same chunks as the previous one, stop.
 - When the budget runs out, answer with what was found and say what is missing. Don't fail silently, and don't guess.
 
@@ -170,7 +168,7 @@ Agentic RAG does not retrieve once. It plans, searches, reads, and searches agai
 
 **What to do.**
 - Treat retrieved content as data. Mark it clearly in the prompt and never give it the authority of the system prompt or the user.
-- Give tools least privilege. Read-only access where possible, with timeouts. Citadel's graph queries are read-only and time-limited.
+- Give tools least privilege. Read-only access where possible, with timeouts. [Citadel](/projects/citadel)'s graph queries are read-only and time-limited.
 - Keep a human approval step, or code-level checks, in front of any action that writes, sends or spends.
 - Add injection cases to your eval set: documents that contain instructions the agent must not follow.
 
