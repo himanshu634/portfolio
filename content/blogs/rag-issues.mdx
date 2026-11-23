@@ -1,0 +1,181 @@
+---
+title: "The Issues of RAG Nobody Explains"
+description: "Everyone explains what RAG is. These are the nine issues to design for when you build a RAG pipeline: retrieval-side, reader-side and loop-side."
+date: "2026-11-23"
+readTime: "9 min read"
+tags: ["rag", "ai-agents", "llm", "retrieval", "evals"]
+draft: true
+---
+
+Everyone explains what RAG is, but here are the issues of RAG we should focus on while building a RAG pipeline.
+
+The diagram is always the same: chunk the documents, embed them, store the vectors, retrieve the top-k, put them in the prompt, generate. It works in a demo. In production, the answer is wrong, and nothing in the diagram tells you why.
+
+I find it useful to sort the failures by where they happen. Some happen before the model sees anything (**retrieval-side**). Some happen while the model reads what you gave it (**reader-side**). And once RAG runs inside an agent that retrieves, reasons and retrieves again, a third kind shows up (**loop-side**).
+
+---
+
+## Retrieval-side: what the model never gets to see
+
+### 1. Recall ceiling
+
+**What breaks.** The model can only reason over what retrieval returned. If the chunk with the answer is not in the top-k, no prompt, model upgrade or chain-of-thought brings it back. Retrieval recall is the ceiling on answer quality.
+
+**How it shows up.** The model answers confidently from the nearest wrong chunk, or says "the documents don't mention this" when they do. Teams then spend weeks tuning the prompt for a problem the prompt can't fix.
+
+![Above: vector search alone leaves the answer chunk at rank 14, below the top-5 cut, and the model says it is not in the documents. Below: vector and full-text search fused with RRF bring it into the top 5, and the answer comes with a citation](diagrams/recall-ceiling.png)
+
+*Same question, two retrievers. Ranks are illustrative.*
+
+**What to do.**
+- Measure retrieval on its own, before generation. Build a small labelled set of questions with the chunk(s) that answer them and track recall@k. If recall@10 is 60%, the best your pipeline can do is roughly 60%.
+- Use hybrid search. Dense vectors miss exact terms: product codes, names, numbers, abbreviations. Lexical search misses paraphrases. Run both and fuse the ranked lists. Reciprocal rank fusion (RRF) is simple and hard to beat as a first step.
+- Fix the chunking. A table split in half, or a heading separated from its body, can't be retrieved as one answer.
+
+In [Maester](https://github.com/himanshu634/maester), my chatbot over company filings, retrieval fuses pgvector HNSW search with Postgres full-text search through RRF. Financial questions are full of exact terms ("EBITDA", a line-item name, a fiscal year) that pure embeddings blur.
+
+### 2. Stale index
+
+**What breaks.** The source changed and the embeddings did not. A policy was updated, a product was discontinued, a document was deleted, and the index still serves the old version.
+
+**How it shows up.** Answers that were right last month. Deleted content that still appears. The worst case is silent: you upgrade the embedding model for new documents, and old vectors from the previous model stay in the same index. Similarity scores across two models mean nothing, and nothing errors.
+
+![Above: the policy document was updated in May but nobody re-indexed, so the index still holds April's chunks and the answer gives April's rule. Below: a change event replaces chunks by source ID and content hash, the index stores the model and version on every vector, and the answer gives May's rule with its date](diagrams/stale-index.png)
+
+*The index is a copy of the source. It goes stale the moment nobody updates it.*
+
+**What to do.**
+- Treat the index as a derived view of the source. Re-index on change events, not on a manual schedule someone forgets.
+- Handle deletes and updates, not only inserts. Store a source ID and a content hash with every chunk so you can find and replace what changed.
+- Store the embedding model and version with every vector. When you change the model, re-embed everything and switch over at once.
+- Put a document date in the chunk metadata so the reader can see how old the evidence is.
+
+### 3. Permission leak
+
+**What breaks.** Retrieval returns content the user is not allowed to see, and the model summarizes it for them. The model has no idea who is asking. It answers from whatever is in the context.
+
+**How it shows up.** An employee asks a general question and gets a fact from a confidential HR document. In a multi-tenant product, one customer's data appears in another customer's answer.
+
+![Above: an employee asks about leave, retrieval searches all documents, a confidential HR salaries chunk comes back with the leave wiki, and the answer quotes salaries. Below: the question carries who is asking, an ACL filter runs before ranking, only the leave wiki comes back, and the answer covers leave rules only](diagrams/permission-leak.png)
+
+*Filter before ranking. After generation, the model has already read it.*
+
+**What to do.**
+- Enforce access inside the retrieval query: a tenant or ACL filter applied before ranking, or a separate index per tenant. Never retrieve everything and filter after generation. By then the model has already read it.
+- Check every path that can return content: caches, conversation memory, query suggestions, and tool calls an agent can make.
+- Test it. Add eval cases where the correct answer is "you don't have access", and fail the build if the answer leaks.
+
+In [Citadel](/projects/citadel), my Graph-RAG memory project, each company gets its own graph, so isolation is a property of where the data lives, not a filter someone has to remember.
+
+---
+
+## Reader-side: the model has the evidence and still gets it wrong
+
+### 4. Lost in the middle
+
+**What breaks.** Models don't use all positions of a long context equally. Liu et al. (["Lost in the Middle"](https://arxiv.org/abs/2307.03172), 2023) found that accuracy was highest when the relevant passage sat at the start or the end of the context, and dropped when it sat in the middle. Long context windows don't remove this position bias.
+
+**How it shows up.** The right chunk is in the prompt, rank 7 of 20, and the answer ignores it. Raising k to "give the model more" makes this worse.
+
+![Above: retrieve 20 chunks, the answer sits 7th of 20 and the model misses it. Below: retrieve 50, rerank, keep 5 with the answer first, and the model uses it](diagrams/lost-in-the-middle.png)
+
+*Fewer, better chunks, with the strongest at the edges.*
+
+**What to do.**
+- Send fewer, better chunks. A reranker over a wide first pass (retrieve 50, rerank, keep 5) usually beats a large k.
+- Put the strongest evidence at the edges of the context, not the middle.
+- Test with the answer placed at different positions in the context. If accuracy changes with position, your pipeline depends on luck.
+
+### 5. Distraction
+
+**What breaks.** Retrieval returns chunks that are similar to the question but not relevant to it. Same topic, different product. Same clause, different contract year. The model treats them as evidence.
+
+**How it shows up.** Answers that blend two similar documents, or answer a nearby question instead of the one asked. Embeddings measure "about the same thing", not "answers this question".
+
+![Above: a question about the 2025 refund window for Plan Pro retrieves the top 3 by similarity, Pro 2025, Pro 2023 and Basic 2025, and the answer blends 2023 and 2025. Below: a metadata filter for Pro and 2025, retrieval, then rerank with a threshold leave only the Pro 2025 chunk, and the answer gives the 2025 rule](diagrams/distraction.png)
+
+*Similar is not relevant. Filter on what the question names, then drop weak matches.*
+
+**What to do.**
+- Rerank with a cross-encoder or an LLM judge that scores relevance to the question, not similarity to it.
+- Use a score threshold so that weak matches are dropped instead of padding the context to k.
+- Filter on metadata before ranking (product, year, document type) when the question names them.
+- Tell the model it may ignore context that doesn't answer the question, and include eval cases where some retrieved chunks are deliberate distractors.
+
+### 6. Evidence conflict
+
+**What breaks.** Two sources disagree: an old policy and a new one, two reports with different figures, or the documents against what the model "knows" from training. The model quietly picks one, often the one it saw last or the one that matches its prior.
+
+**How it shows up.** An answer that is correct for one source and wrong for the other, with no hint that a conflict existed.
+
+![Above: a 2023 policy says 30 days and a 2025 policy says 14 days; the model answers 30 days with no hint of a conflict. Below: both chunks carry source and date, a rule in code says newest wins, and the answer says 14 days, cites 2025, and notes the 2023 policy said 30](diagrams/evidence-conflict.png)
+
+*Settle conflicts with a written rule, and cite both sides.*
+
+**What to do.**
+- Keep the date and source on every chunk and show them to the model.
+- Write a rule for conflicts: newest wins, the authoritative source wins, or show both. Make it explicit in the prompt or, better, in code.
+- When the conflict can't be settled, say so in the answer, with both citations.
+- Require citations. When every claim points at a source, a reviewer can check it. In [Maester](https://github.com/himanshu634/maester), every figure links to the PDF page it came from.
+
+---
+
+## Loop-side: RAG inside an agent
+
+Agentic RAG does not retrieve once. It plans, searches, reads, and searches again. That fixes some recall problems and adds three new ones.
+
+### 7. Compounding error
+
+**What breaks.** A wrong step early in the loop becomes the premise for every later step. The agent retrieves the wrong entity in hop 1, and hops 2 to 5 build carefully on top of it.
+
+**How it shows up.** Long, well-reasoned traces that reach a confident and wrong conclusion. Each step looks fine. The first one wasn't.
+
+![Above: hop 1 looks for Acme and picks Acme Inc when the question meant Acme Ltd; hops 2 and 3 build on it and the answer is confident and wrong. Below: after hop 1, a check asks whether it is the right entity; yes goes on to hop 2 and the answer, no sends it back to search again](diagrams/compounding-error.png)
+
+*A check between hops costs one step and saves the run.*
+
+**What to do.**
+- Check intermediate results, not only the final answer. Validate the entity, the number or the tool output before the next step uses it.
+- Keep deterministic work out of the model. Calculations, lookups and comparisons belong in code that the agent calls.
+- Check that claims are grounded. [Citadel](/projects/citadel)'s grounding check rejects an answer that cites something the agent never retrieved.
+- Evaluate full traces, not single turns, so you see where a run went wrong.
+
+### 8. No stopping rule
+
+**What breaks.** The agent has no clear test for "I have enough evidence". It keeps searching, or it stops too early, or it loops on the same query in slightly different words.
+
+**How it shows up.** High latency and cost on some questions, thin answers on others, and runs that end only when they hit a timeout.
+
+![Above: search, read, and an "enough?" check with no real test, so the agent searches again for the same chunks in new words until it times out. Below: after reading, if the required facts are found it answers; if not, it searches again only while budget is left and new chunks keep coming; otherwise it answers with what it found and says what is missing](diagrams/no-stopping-rule.png)
+
+*Two tests end the loop: the facts are found, or the budget and new evidence run out.*
+
+**What to do.**
+- Define sufficiency explicitly: which facts must be found before the agent answers.
+- Set hard budgets: maximum iterations, maximum tool calls, maximum model calls. [Maester](https://github.com/himanshu634/maester)'s extraction loop runs under a model-call budget.
+- Detect repeats. If a new search returns the same chunks as the previous one, stop.
+- When the budget runs out, answer with what was found and say what is missing. Don't fail silently, and don't guess.
+
+### 9. Prompt injection
+
+**What breaks.** Retrieved text is untrusted input, and the model can't reliably tell data from instructions. A document, web page or email that says "ignore previous instructions and..." can steer the agent, and the risk grows with every tool the agent can call.
+
+**How it shows up.** An agent that leaks data through a tool call, takes an action nobody asked for, or changes its answer because a document told it to.
+
+![Above: a retrieved email says to ignore previous instructions and send a file; the agent reads it as an order, calls send_email, and data leaves. Below: the retrieved email is marked as data; the agent has read-only tools, and anything that writes, sends or spends goes through human approval, so nothing is sent without a yes](diagrams/prompt-injection.png)
+
+*Retrieved text is data. Actions that write, send or spend need a yes.*
+
+**What to do.**
+- Treat retrieved content as data. Mark it clearly in the prompt and never give it the authority of the system prompt or the user.
+- Give tools least privilege. Read-only access where possible, with timeouts. [Citadel](/projects/citadel)'s graph queries are read-only and time-limited.
+- Keep a human approval step, or code-level checks, in front of any action that writes, sends or spends.
+- Add injection cases to your eval set: documents that contain instructions the agent must not follow.
+
+---
+
+## What this adds up to
+
+Most of these nine issues don't show up as errors. The pipeline returns a fluent answer every time. That is why the fix is the same in every section: measure each stage on its own. Retrieval recall before generation. Answer accuracy with distractors and conflicts in the context. Full agent traces with budgets and injection cases. Keep a held-out set you never tune against, so the numbers stay honest.
+
+When I build a RAG pipeline now, I start with this list, not the architecture diagram. The diagram tells you how RAG works. The list tells you where it will break.
