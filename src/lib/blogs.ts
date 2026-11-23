@@ -18,6 +18,14 @@ export interface BlogPost {
 
 const contentDirectory = path.join(process.cwd(), "content", "blogs");
 
+/**
+ * `draft: true` keeps a post off the production site: no listing, no page.
+ * Local dev and Vercel preview deployments still show it, so a draft can be read before it ships.
+ */
+function isHidden(data: { draft?: unknown }): boolean {
+  return data.draft === true && process.env.VERCEL_ENV === "production";
+}
+
 export function getAllBlogPosts(): BlogPost[] {
   // Ensure the directory exists
   if (!fs.existsSync(contentDirectory)) {
@@ -32,6 +40,7 @@ export function getAllBlogPosts(): BlogPost[] {
       const fullPath = path.join(contentDirectory, fileName);
       const fileContents = fs.readFileSync(fullPath, "utf8");
       const { data } = matter(fileContents);
+      if (isHidden(data)) return null;
 
       return {
         slug,
@@ -43,7 +52,8 @@ export function getAllBlogPosts(): BlogPost[] {
         featured: data.featured === true,
         earlier: data.earlier === true,
       } as BlogPost;
-    });
+    })
+    .filter((post): post is BlogPost => post !== null);
 
   // Featured first, then by date (most recent first)
   return allPostsData.sort((a, b) => {
@@ -67,6 +77,7 @@ export function getBlogPostBySlug(slug: string) {
 
   const fileContents = fs.readFileSync(fullPath, "utf8");
   const { data, content } = matter(fileContents);
+  if (isHidden(data)) return null;
 
   return {
     slug,
