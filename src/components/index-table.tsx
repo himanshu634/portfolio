@@ -94,7 +94,7 @@ export function IndexTable({ items }: { items: IndexItem[] }) {
                 <ul>
                   {sectionItems.map((item) => (
                     <li key={item.href + item.title} className="border-t border-border">
-                      <Row item={item} first={item.now ? "Now" : String(item.year)} columns={SECTION_COLUMNS} lit={Boolean(item.now || item.featured)} />
+                      <Row item={item} first={item.now ? "Now" : String(item.year)} columns={SECTION_COLUMNS} lit={Boolean(item.now)} />
                     </li>
                   ))}
                 </ul>
