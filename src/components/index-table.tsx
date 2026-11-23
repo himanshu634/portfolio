@@ -3,12 +3,9 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import * as Accordion from "@radix-ui/react-accordion";
-import { EARLIER, KINDS, type IndexItem, type Kind } from "@/lib/index-items";
+import { EARLIER, KINDS, type IndexItem } from "@/lib/index-items";
 
-const KIND_LABEL = Object.fromEntries(KINDS.map((k) => [k.kind, k.label])) as Record<Kind, string>;
-
-// Now: Kind | Item | Link. A section: Year | Item | Link. Below md each row stacks.
-const NOW_COLUMNS = "md:grid md:grid-cols-[150px_minmax(0,1fr)_170px]";
+// A section row: Year | Item | Link. Below md each row stacks.
 const SECTION_COLUMNS = "md:grid md:grid-cols-[120px_minmax(0,1fr)_170px]";
 
 const DISPLAY = "font-black [font-stretch:62%] uppercase leading-none";
@@ -34,8 +31,7 @@ function peek(items: IndexItem[]): string {
 }
 
 /**
- * The home page: what is live now, always shown, then one folded section per
- * kind and an Earlier section last. Sections start closed and any number can
+ * The home page: one folded section per kind and an Earlier section last. Sections start closed and any number can
  * be open at once.
  */
 export function IndexTable({ items }: { items: IndexItem[] }) {
@@ -62,27 +58,8 @@ export function IndexTable({ items }: { items: IndexItem[] }) {
     setScrollTarget(null);
   }, [scrollTarget]);
 
-  const now = items
-    .filter((item) => (item.now || item.featured) && !item.earlier)
-    .sort((a, b) => KINDS.findIndex((k) => k.kind === a.kind) - KINDS.findIndex((k) => k.kind === b.kind));
-
   return (
     <div id="index" className="scroll-mt-4">
-      {now.length > 0 && (
-        <section aria-labelledby="now-heading" className="mt-5 border-2 border-border">
-          <h2 id="now-heading" className={`flex h-14 items-center bg-now px-3 text-[30px] md:px-3.5 md:text-[34px] ${DISPLAY}`}>
-            Now
-          </h2>
-          <ul>
-            {now.map((item) => (
-              <li key={item.href + item.title} className="border-t border-border">
-                <Row item={item} first={item.featured ? "Featured post" : KIND_LABEL[item.kind]} columns={NOW_COLUMNS} />
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
-
       <Accordion.Root type="multiple" value={open} onValueChange={setOpen} className="mt-5 border-2 border-border">
         {SECTIONS.map(({ value, section, hash }, i) => {
           const sectionItems = items.filter((item) => inSection(item, value));
@@ -130,14 +107,14 @@ export function IndexTable({ items }: { items: IndexItem[] }) {
   );
 }
 
-/** One linked row: a first cell (the kind in Now, the year in a section), the item, and where it goes. */
-function Row({ item, first, columns, lit }: { item: IndexItem; first: string; columns: string; lit?: boolean }) {
+/** One linked row: the year (or "Now"), the item, and where it goes. */
+function Row({ item, first, columns, lit }: { item: IndexItem; first: string; columns: string; lit: boolean }) {
   const external = item.href.startsWith("http");
   const firstCell = lit ? "bg-now font-bold" : "";
 
   const cells = (
     <>
-      <span className={`hidden items-center border-r border-border px-3.5 tabular-nums md:flex ${firstCell} ${lit === undefined ? "font-bold" : ""}`}>
+      <span className={`hidden items-center border-r border-border px-3.5 tabular-nums md:flex ${firstCell}`}>
         {first}
       </span>
       <span className="flex min-w-0 flex-col gap-0.5 px-3 pt-2.5 pb-3 md:block md:border-r md:border-border md:px-3.5 md:py-3.5">
