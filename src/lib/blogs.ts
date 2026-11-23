@@ -10,8 +10,6 @@ export interface BlogPost {
   date: string;
   readTime?: string;
   tags?: string[];
-  /** Pinned to the top of the writing list and the home index. */
-  featured?: boolean;
   /** Off the main thread: listed under "Earlier" on the home index and /blogs. */
   earlier?: boolean;
 }
@@ -49,17 +47,13 @@ export function getAllBlogPosts(): BlogPost[] {
         date: data.date || "",
         readTime: data.readTime,
         tags: data.tags || [],
-        featured: data.featured === true,
         earlier: data.earlier === true,
       } as BlogPost;
     })
     .filter((post): post is BlogPost => post !== null);
 
-  // Featured first, then by date (most recent first)
+  // Most recent first
   return allPostsData.sort((a, b) => {
-    if (a.featured !== b.featured) {
-      return a.featured ? -1 : 1;
-    }
     if (a.date < b.date) {
       return 1;
     } else {
