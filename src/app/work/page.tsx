@@ -1,12 +1,16 @@
 import { Metadata } from "next";
+import { pageMetadata } from "@/lib/site";
 import { OpenSourceContri } from "@/components/open-source-contri";
 import { Shell } from "@/components/shell";
 import { WorkEx } from "@/components/work-ex";
 
 export const metadata: Metadata = {
-  title: "Work — Himanshu Mendapara",
-  description:
-    "Himanshu Mendapara's work: tech lead at Bull Agritech on a procurement CRM, production AI agents and the Koshi app; earlier, the Genuin web app and SDK.",
+  ...pageMetadata({
+    title: "Work — Himanshu Mendapara",
+    description:
+      "Himanshu Mendapara's work: tech lead at Bull Agritech on a procurement CRM, production AI agents and the Koshi app; earlier, the Genuin web app and SDK.",
+    path: "/work",
+  }),
 };
 
 export default function WorkPage() {

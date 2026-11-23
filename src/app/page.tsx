@@ -4,6 +4,7 @@ import { Lede } from "@/components/lede";
 import { Shell } from "@/components/shell";
 import { getAllBlogPosts } from "@/lib/blogs";
 import { getIndexItems } from "@/lib/index-items";
+import { SITE_NAME } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Himanshu Mendapara",
@@ -27,11 +28,19 @@ export const metadata: Metadata = {
     "Next.js",
   ],
   authors: [{ name: "Himanshu Mendapara" }],
+  alternates: { canonical: "/" },
   openGraph: {
     title: "Himanshu Mendapara",
     description:
       "Product engineer, curious about AI and how to implement it well.",
     type: "website",
+    url: "/",
+    siteName: SITE_NAME,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Himanshu Mendapara",
+    description: "Product engineer, curious about AI and how to implement it well.",
   },
 };
 

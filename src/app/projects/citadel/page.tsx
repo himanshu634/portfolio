@@ -1,14 +1,18 @@
 import Image from "next/image";
 import { Metadata } from "next";
+import { pageMetadata } from "@/lib/site";
 import { ReactNode } from "react";
 import { Shell } from "@/components/shell";
 import { Part } from "@/components/part";
 import { Project } from "@/components/work-ex";
 
 export const metadata: Metadata = {
-  title: "Citadel — Himanshu Mendapara",
-  description:
-    "A company brain on FalkorDB that Claude agents answer from, and the Keeper agent that repairs it. Built for Graph Hacks, October 2026.",
+  ...pageMetadata({
+    title: "Citadel — Himanshu Mendapara",
+    description:
+      "A company brain on FalkorDB that Claude agents answer from, and the Keeper agent that repairs it. Built for Graph Hacks, October 2026.",
+    path: "/projects/citadel",
+  }),
   keywords: [
     "Citadel",
     "FalkorDB",
