@@ -70,10 +70,11 @@ const ITEMS: IndexItem[] = [
   },
   {
     kind: "project",
-    title: "Secrin",
-    description: "Answers why code was written, from commits, issues and docs.",
-    year: 2025,
-    href: "https://github.com/himanshu634/secrin",
+    title: "Herald",
+    description:
+      "Open-source mailbox manager for a one-person business: flags the few emails that matter and sorts the rest.",
+    year: 2026,
+    href: "https://github.com/himanshu634/Herald",
     linkLabel: "GitHub",
   },
   {
