@@ -2,7 +2,7 @@
 title: "Everyone explains PTC. Few explain how it breaks."
 description: "Programmatic tool calling, the 10 mistakes to avoid when you build it, and the fix for each."
 date: "2026-11-24"
-readTime: "7 min read"
+readTime: "6 min read"
 tags: ["ptc", "ai-agents", "llm", "tool-calling", "security"]
 ---
 
@@ -150,21 +150,6 @@ The model assumes a variable or file from the last run still exists, and it does
 **Fix:** pick one lifecycle and document it. Either every run starts fresh, or the session persists variables and files between runs. Say which in the prompt, and never mix the two.
 
 ---
-
-## Checklist
-
-Before you ship programmatic tool calling, check that:
-
-- [ ] Every tool has a typed output schema, a stable return shape and one usage example. (#1)
-- [ ] Errors are typed, never empty results, and the run reports every tool error. (#2)
-- [ ] Each run has a call budget, concurrency limits, time and memory limits, and bulk reads have batch endpoints. (#3)
-- [ ] Writes have idempotency keys, a dry-run mode and approval for bulk or irreversible actions. (#4)
-- [ ] The sandbox holds bindings only. The proxy holds the credentials, and the sandbox has no network egress. (#5)
-- [ ] Tool output is treated as data, and the proxy enforces policy on every call. (#6)
-- [ ] Stdout is capped and truncated with a visible marker. (#7)
-- [ ] The prompt states the language, version and installed packages, and parse errors go back to the model. (#8)
-- [ ] Every binding call is logged and traced under its parent run. (#9)
-- [ ] The run lifecycle is documented: fresh or persistent, not both. (#10)
 
 PTC is a good trade when a task needs many calls and lots of data. Most of the work in making it safe goes into the proxy, not the model.
 
