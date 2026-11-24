@@ -1,0 +1,160 @@
+---
+title: "Everyone explains PTC. Few explain how it breaks."
+description: "Programmatic tool calling, the 10 mistakes to avoid when you build it, and the fix for each."
+date: "2026-11-24"
+readTime: "6 min read"
+tags: ["ptc", "ai-agents", "llm", "tool-calling", "security"]
+---
+
+## Sequential calling vs programmatic tool calling
+
+Ask an agent: *"Which customers are more than 30 days overdue, and what do they owe?"* Say there are 200 customers.
+
+With **sequential tool calling**, the model calls one tool, reads the result, then decides on the next call. It calls `list_customers` once, then `get_invoices` once per customer. That's 201 tool calls. Models can batch several calls into one turn, but every result still lands in the model's context, so each request grows bigger than the last. At the end, the model adds up 200 amounts in its head.
+
+With **programmatic tool calling** (PTC), the model writes a short script instead. The script runs in a sandbox, makes the same 201 calls, and loops, filters and sums in code. Only the summary goes back to the model.
+
+```python
+customers = list_customers(status="active")["items"]
+overdue = [
+    {"customer": c["name"], "amount": inv["amount"]}
+    for c in customers
+    for inv in get_invoices(customer_id=c["id"], status="unpaid")["items"]
+    if inv["days_overdue"] > 30
+]
+print({"count": len(overdue), "total": sum(o["amount"] for o in overdue)})
+```
+
+![Sequential tool calling: every result piles up in the context, requests get slow, the model does the math. Programmatic tool calling: only the summary in the context, small requests, code does the math](diagrams/sequential-vs-ptc.png)
+
+What you get:
+
+- **Cheaper.** Only the summary enters the context, not 200 invoice lists. This is the main win: every request to the model stays small.
+- **Faster on long tasks.** Small requests are quick to process, so long jobs finish sooner. The win doesn't come from fewer round trips, since models already batch calls; it comes from what each request no longer carries.
+- **More reliable.** Code adds the numbers; the model doesn't have to.
+- **Less noise.** The raw data never reaches the model, so it has less to get confused by.
+
+PTC is the right tool when a task needs many calls, loops, filters or totals over a lot of data. It's the wrong tool when each result needs judgement, such as reading each email to decide how to reply. Keep that in the model. And on small jobs with only a few items, writing and running a script can cost more than calling the tools directly.
+
+## Where it breaks
+
+PTC moves work that used to happen in plain sight into a script nobody reads before it runs. That's where things go wrong. Here are ten mistakes, where each one happens, and what to do about it.
+
+![Where programmatic tool calling goes wrong: each pitfall placed under the pipeline stage where it happens](diagrams/pitfall-map.png)
+
+The pitfalls fall into five families: the **contract** between the model and your tools, **load and cost**, **security**, **context and state**, and **observability**. The colours in the diagrams follow those families.
+
+---
+
+## Part 1: the contract between the script and your tools
+
+The model writes code against tools it has never called. Everything it knows comes from your docs, so the docs have to be a real contract.
+
+![Fixes for #1, #2 and #8: typed tool docs, a runtime spec, parse errors sent back, typed results](diagrams/fix-contract.png)
+
+### 1. Return types the model can't predict
+
+The model writes `result.items[0].email` before it has ever seen a response. If a tool sometimes returns a list, sometimes an object and sometimes a sentence of prose, the script crashes, or worse, reads the wrong field.
+
+**Fix:**
+- Publish a typed **output** schema for every tool, not only the input schema.
+- Keep return shapes stable. A search with no hits returns `{"items": []}`, not `null` or `"No results found."`
+- Add one short usage example per tool. A single example shows how the output is read better than a page of schema.
+
+```python
+# get_invoices(customer_id: str, status: str) -> {"items": [Invoice]}
+# Invoice = {"id": str, "amount": float, "days_overdue": int}
+# Example:
+#   unpaid = get_invoices(customer_id="c_42", status="unpaid")["items"]
+```
+
+### 2. Silent failures
+
+A search tool that returns `[]` when the API errors looks exactly like "no results". The script carries on and reports "0 overdue invoices" with full confidence.
+
+**Fix:** never turn an error into an empty result. Return `{ok: false, error}` or raise a typed error, and have the run report list every tool error that happened, even ones the script caught. The model should never have to guess whether "nothing" means nothing.
+
+### 8. Runtime mismatches
+
+The model writes TypeScript type annotations into a plain JavaScript runtime, forgets an `await`, or imports a library that isn't installed. None of that is a logic bug, but the run still fails.
+
+**Fix:** state the exact language, version and installed packages in the tool prompt. When a script doesn't parse, send the parse error back cleanly so the model can fix it and retry, instead of a generic "execution failed".
+
+---
+
+## Part 2: the proxy between the script and the world
+
+Most of the dangerous pitfalls share one fix: the script never talks to the outside world directly. Each tool in the sandbox is only a **binding**, a stub that forwards the call to a proxy running outside the sandbox. The proxy holds the credentials and enforces every rule.
+
+![Fixes for #3, #4, #5, #6 and #9: budget, policy checks, approval, idempotency, credentials added by the proxy, results marked untrusted, trace log](diagrams/fix-proxy.png)
+
+### 3. Unbounded fan-out
+
+A loop over 10,000 contacts makes 10,000 calls. You hit rate limits, a cost spike or a timeout, and a half-finished run.
+
+**Fix:**
+- A per-run **call budget**, enforced at the proxy.
+- Concurrency limits, plus wall-clock and memory limits on the sandbox.
+- **Batch endpoints** such as `get_contacts(ids=[...])`, so the script doesn't need a loop of single calls in the first place.
+
+### 4. Non-idempotent writes
+
+A script sends 40 emails, crashes on the 41st, and the retry sends the first 40 again.
+
+**Fix:**
+- **Idempotency keys** on every write, so a repeated call is a no-op.
+- Keep read tools and write tools separate, so the proxy knows which is which.
+- A **dry-run mode** that reports what would be written without writing it.
+- **Human approval** before bulk or irreversible writes.
+
+### 5. Secrets inside the sandbox
+
+Putting API keys in environment variables hands them to code the model wrote. One `print(os.environ)` and they're in the output.
+
+**Fix:** the sandbox gets bindings only, never keys. The proxy outside the sandbox adds credentials to each outgoing call. Block network egress from the sandbox, and scope each binding to the least privilege it needs.
+
+### 6. Prompt injection that runs without review
+
+A web page or email the script fetches can contain instructions. With normal tool calling, the model at least reads that text before acting on it. In a script, fetched text can flow straight into a write call the model never looked at.
+
+**Fix:**
+- Treat every tool result as **untrusted data**, never as instructions.
+- Put **policy checks** at the binding layer: allowed recipients, amount caps, allowed domains. The proxy rejects a call that breaks policy, whatever the script says.
+- Gate sensitive actions behind approval.
+
+### 9. No visibility into individual calls
+
+One "execute script" call can hide 50 tool calls. Your traces show a single step, and your evals and debugging lose the detail they rely on.
+
+**Fix:** log every binding call at the proxy (arguments, result size, latency, errors) and nest those logs under the parent run in your traces. The proxy sees every call, so it's the natural place to record them.
+
+---
+
+## Part 3: what goes back to the model, and what stays between runs
+
+![Fixes for #7 and #10: aggregate in code, cap and truncate stdout, choose one lifecycle](diagrams/fix-output-state.png)
+
+### 7. Flooding the context with output
+
+Printing every raw result undoes the main benefit of PTC. If the script prints 10,000 rows, they all land in the model's context anyway.
+
+**Fix:**
+- Cap stdout.
+- When output goes over the cap, truncate it with a clear marker, such as `... 9,950 rows cut`, so the model knows something is missing.
+- Tell the model in the prompt to filter and aggregate in code, and print only the summary it needs.
+
+### 10. Unclear state between runs
+
+The model assumes a variable or file from the last run still exists, and it doesn't. Or the opposite: it doesn't realise that a file is still there from before, and reads stale data.
+
+**Fix:** pick one lifecycle and document it. Either every run starts fresh, or the session persists variables and files between runs. Say which in the prompt, and never mix the two.
+
+---
+
+PTC is a good trade when a task needs many calls and lots of data. Most of the work in making it safe goes into the proxy, not the model.
+
+## Further reading
+
+If you want to go deeper on PTC, read [Code mode: make your agents 2x faster and 2x cheaper on long tasks](https://pydantic.dev/articles/why-code-mode-is-the-future) by Michael Pfaffenberger at Pydantic (28 Oct 2026). It benchmarks code mode against normal tool calling over 5,276 runs on eight models. On long tasks, code mode cut cost by 58% and wall time by 51%. It also shows where code mode costs more: small jobs with only a few items.
+
+For a benchmark view, read [The Bitter Lesson of Tool Calling](https://arxiv.org/abs/2608.06370) by Ishan Patel, Sahil Sen, Elias Lumer and Vamse Kumar Subbiah (arXiv, 6 Aug 2026). It compares PTC with normal JSON tool calling across 14 models on BFCL v4. PTC matched or beat JSON tool calling on 11 of the 14 models, and on 13 of 14 when calls fan out in parallel.

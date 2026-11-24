@@ -202,6 +202,52 @@ textarea:focus-visible {
   border: none !important;
 }
 
+/* Syntax colours for the hljs classes rehype-highlight adds to fenced code.
+   GitHub's light palette: every colour is at least 4.5:1 on white. */
+.mdx-content .hljs-comment,
+.mdx-content .hljs-quote {
+  color: #6e7781;
+  font-style: italic;
+}
+.mdx-content .hljs-keyword,
+.mdx-content .hljs-selector-tag,
+.mdx-content .hljs-type,
+.mdx-content .hljs-meta .hljs-keyword {
+  color: #cf222e;
+}
+.mdx-content .hljs-string,
+.mdx-content .hljs-regexp,
+.mdx-content .hljs-meta .hljs-string {
+  color: #0a3069;
+}
+.mdx-content .hljs-number,
+.mdx-content .hljs-literal,
+.mdx-content .hljs-attr,
+.mdx-content .hljs-attribute,
+.mdx-content .hljs-variable,
+.mdx-content .hljs-property,
+.mdx-content .hljs-symbol {
+  color: #0550ae;
+}
+.mdx-content .hljs-title,
+.mdx-content .hljs-title.function_,
+.mdx-content .hljs-section {
+  color: #8250df;
+}
+.mdx-content .hljs-built_in,
+.mdx-content .hljs-title.class_,
+.mdx-content .hljs-meta {
+  color: #953800;
+}
+.mdx-content .hljs-deletion {
+  color: #82071e;
+  background: #ffebe9;
+}
+.mdx-content .hljs-addition {
+  color: #116329;
+  background: #dafbe1;
+}
+
 /* Markdown images: the italic line after one is its caption. */
 .mdx-content p:has(> .mdx-figure) {
   margin-bottom: 0.5rem;
