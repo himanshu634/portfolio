@@ -6,8 +6,6 @@ readTime: "7 min read"
 tags: ["ptc", "ai-agents", "llm", "tool-calling", "security"]
 ---
 
-*Programmatic tool calling, the 10 mistakes to avoid when you build it, and the fix for each.*
-
 ## Sequential calling vs programmatic tool calling
 
 Ask an agent: *"Which customers are more than 30 days overdue, and what do they owe?"* Say there are 200 customers.
@@ -173,3 +171,5 @@ PTC is a good trade when a task needs many calls and lots of data. Most of the w
 ## Further reading
 
 If you want to go deeper on PTC, read [Code mode: make your agents 2x faster and 2x cheaper on long tasks](https://pydantic.dev/articles/why-code-mode-is-the-future) by Michael Pfaffenberger at Pydantic (28 Oct 2026). It benchmarks code mode against normal tool calling over 5,276 runs on eight models. On long tasks, code mode cut cost by 58% and wall time by 51%. It also shows where code mode costs more: small jobs with only a few items.
+
+For a benchmark view, read [The Bitter Lesson of Tool Calling](https://arxiv.org/abs/2608.06370) by Ishan Patel, Sahil Sen, Elias Lumer and Vamse Kumar Subbiah (arXiv, 6 Aug 2026). It compares PTC with normal JSON tool calling across 14 models on BFCL v4. PTC matched or beat JSON tool calling on 11 of the 14 models, and on 13 of 14 when calls fan out in parallel.
